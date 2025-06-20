@@ -1,19 +1,99 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Modal from "./Modal";
+import axios from "axios";
 
 export default function AddFabric() {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [fabricName, setFabricName] = useState("");
+  const [fabrics, setFabrics] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  const [currentFabricId, setCurrentFabricId] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch fabrics on component mount
+  useEffect(() => {
+    fetchFabrics();
+  }, []);
+
+  const fetchFabrics = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("http://localhost:3000/api/admin/productManagement/fabric");
+      setFabrics(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching fabrics:", error);
+      setLoading(false);
+      alert("Failed to fetch fabrics");
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!fabricName.trim()) {
+      alert("Fabric name cannot be empty");
+      return;
+    }
+
+    try {
+      if (editMode && currentFabricId) {
+        // Update existing fabric
+        await axios.post(`http://localhost:3000/api/admin/productManagement/fabric`, {
+          Fabric: fabricName,
+          fabricId: currentFabricId
+        });
+        alert("Fabric updated successfully");
+      } else {
+        // Add new fabric
+        await axios.post("http://localhost:3000/api/admin/productManagement/fabric", {
+          Fabric: fabricName
+        });
+        alert("Fabric added successfully");
+      }
+
+      fetchFabrics(); // Refresh the list
+      closeModal();
+    } catch (error) {
+      console.error("Error saving fabric:", error);
+      alert(error.response?.data?.error || "Failed to save fabric");
+    }
+  };
+
+  const handleEdit = (fabric) => {
+    setFabricName(fabric.Fabric);
+    setCurrentFabricId(fabric._id);
+    setEditMode(true);
+    openModal();
+  };
+
+  const handleDelete = async (fabricId) => {
+    if (!window.confirm("Are you sure you want to delete this fabric?")) return;
+
+    try {
+      await axios.delete(`http://localhost:3000/api/admin/productManagement/fabric/${fabricId}`);
+      alert("Fabric deleted successfully");
+      fetchFabrics(); // Refresh the list
+    } catch (error) {
+      console.error("Error deleting fabric:", error);
+      alert("Failed to delete fabric");
+    }
+  };
 
   const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
+  const closeModal = () => {
+    setModalOpen(false);
+    setFabricName("");
+    setEditMode(false);
+    setCurrentFabricId(null);
+  };
+
   return (
-    <div className="flex flex-col  w-full overflow-auto">
-      <div className="bg-white rounded-xl my-5 mx-5 p-8 shadow-lg w-80%  ">
-        <p className="text-xl font-bold mb-5 ">Add New Fabric</p>
+    <div className="flex flex-col w-full overflow-auto">
+      <div className="bg-white rounded-xl my-5 mx-5 p-8 shadow-lg w-80%">
+        <p className="text-xl font-bold mb-5">Add New Fabric</p>
         <button
           onClick={openModal}
-          className="  bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 shadow-lg transform hover:-translate-y-0.5 transition-all duration-300"
+          className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 shadow-lg transform hover:-translate-y-0.5 transition-all duration-300"
         >
           Add Fabric
         </button>
@@ -22,7 +102,9 @@ export default function AddFabric() {
             type="text"
             name="Fabric"
             placeholder="Add Fabric"
-            className=" py-2 border mr-3 rounded-lg px-2  focus:outline-none "
+            value={fabricName}
+            onChange={(e) => setFabricName(e.target.value)}
+            className="w-full py-2 border rounded-lg px-2 focus:outline-none"
           />
           <div className="flex flex-row justify-between">
             <button
@@ -33,70 +115,55 @@ export default function AddFabric() {
             </button>
             <button
               className="mt-6 bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 shadow-lg transform hover:-translate-y-0.5 transition-all duration-300"
-              onClick={closeModal}
+              onClick={handleSubmit}
             >
-              Save
+              {editMode ? "Update" : "Save"}
             </button>
           </div>
         </Modal>
       </div>
-      <div className="bg-white rounded-xl my-5 mx-5 p-8 shadow-lg w-80%  ">
+      <div className="bg-white rounded-xl my-5 mx-5 p-8 shadow-lg w-80%">
         <p className="text-xl font-bold p-3 pt-0">Previous Added Fabrics</p>
-        <div className="flex flex-col gap-5 w-2/5">
-          <div className="flex flex-row bg-black justify-between border-b p-4 rounded-lg">
-            <p className="font-black text-white">Fabrics</p>
-            <p className="font-black mr-3 text-white"> Action</p>
+        {loading ? (
+          <div className="flex justify-center items-center py-8">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
           </div>
-          {Fabrics.map((fabric, index) => (
-            <div
-              className="flex flex-row justify-between border-b p-2"
-              key={index}
-            >
-              <div className="flex flex-col gap-2 items-center justify-center">
-                <p>{fabric.fabric}</p>
-              </div>
-              <div className="flex flex-row items-center justify-center gap-8">
-                <button className=" ">
-                  <EditIcon />
-                </button>
-                <button className="pb-1">
-                  <RiDeleteBin6Line className="h-5 w-5" />
-                </button>
-              </div>
+        ) : (
+          <div className="flex flex-col gap-5 w-2/5">
+            <div className="flex flex-row bg-black justify-between border-b p-4 rounded-lg">
+              <p className="font-black text-white">Fabrics</p>
+              <p className="font-black mr-3 text-white">Action</p>
             </div>
-          ))}
-        </div>
+            {fabrics.map((fabric, index) => (
+              <div
+                className="flex flex-row justify-between border-b p-2 items-center"
+                key={index}
+              >
+                <div className="flex flex-col gap-2 items-center justify-center">
+                  <p>{fabric.Fabric}</p>
+                </div>
+                <div className="flex flex-row items-center justify-center gap-8">
+                  <button
+                    className="text-blue-600 hover:text-blue-800"
+                    onClick={() => handleEdit(fabric)}
+                  >
+                    <EditIcon />
+                  </button>
+                  <button
+                    className="text-red-600 hover:text-red-800"
+                    onClick={() => handleDelete(fabric._id)}
+                  >
+                    <RiDeleteBin6Line className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
-const Fabrics = [
-  {
-    id: 1,
-    fabric: "Cotton",
-  },
-  {
-    id: 2,
-    fabric: "Plastic",
-  },
-  {
-    id: 3,
-    fabric: "Pink",
-  },
-  {
-    id: 4,
-    fabric: "BLack",
-  },
-  {
-    id: 5,
-    fabric: "White",
-  },
-  {
-    id: 6,
-    fabric: "Green",
-  },
-];
 
 function EditIcon() {
   return (
