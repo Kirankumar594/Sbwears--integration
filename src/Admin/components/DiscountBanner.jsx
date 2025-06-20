@@ -1,15 +1,35 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Modal from "./Modal";
 import axios from "axios";
-
 
 export default function DiscountBanner() {
   const [formData, setFormData] = useState({
     imageLink: "",
     couponCode: "",
+    bannerId: null, // For edit mode
   });
 
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [banners, setBanners] = useState([]);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  // Fetch banners on component mount
+  useEffect(() => {
+    fetchBanners();
+  }, []);
+
+  const fetchBanners = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/admin/banner");
+      setBanners(response.data);
+    } catch (error) {
+      console.error("Error fetching banners:", error);
+      alert("Failed to fetch banners");
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -19,62 +39,105 @@ export default function DiscountBanner() {
     }));
   };
 
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(null);
-
-  // Handle File Selection
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
-    setPreview(URL.createObjectURL(selectedFile)); // Show image preview
+    setPreview(URL.createObjectURL(selectedFile));
   };
 
-  const handleUpload = async () => {
-    if (!file) return alert("Please select a file!");
-  
-    // Create FormData instance
+  const resetForm = () => {
+    setFormData({
+      imageLink: "",
+      couponCode: "",
+      bannerId: null,
+    });
+    setFile(null);
+    setPreview(null);
+    setIsEditMode(false);
+  };
+
+  const handleSubmit = async () => {
+    if (!file && !isEditMode) return alert("Please select a file!");
+    if (!formData.imageLink || !formData.couponCode) {
+      return alert("All fields are required!");
+    }
+
     const formDataToSend = new FormData();
-    formDataToSend.append("image", file); // Append image file
-    formDataToSend.append("imageLink", formData.imageLink); // Append text fields
+    if (file) formDataToSend.append("image", file);
+    formDataToSend.append("imageLink", formData.imageLink);
     formDataToSend.append("couponCode", formData.couponCode);
-  
-    // Debugging: Log the appended values
-    for (let pair of formDataToSend.entries()) {
-      console.log(pair[0], pair[1]); // Check if formData is correctly populated
-    }
-    
+
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/admin/banner",
-        formDataToSend,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-      console.log("Upload Response:", response.data);
-      alert("Banner uploaded successfully!");
+      let response;
+      if (isEditMode && formData.bannerId) {
+        // Update existing banner
+        formDataToSend.append("bannerId", formData.bannerId);
+        response = await axios.post(
+          `http://localhost:3000/api/admin/banner?bannerId=${formData.bannerId}`,
+          formDataToSend,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+      } else {
+        // Create new banner
+        response = await axios.post(
+          "http://localhost:3000/api/admin/banner",
+          formDataToSend,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+      }
+
+      console.log("Response:", response.data);
+      fetchBanners(); // Refresh the banner list
+      closeModal();
+      resetForm();
+      alert(`Banner ${isEditMode ? "updated" : "added"} successfully!`);
     } catch (error) {
-      console.error("Upload Error:", error);
-      alert("Upload failed!");
+      console.error("Error:", error);
+      alert(`Failed to ${isEditMode ? "update" : "add"} banner`);
     }
   };
-  
-  
-   
 
-  const [isModalOpen, setModalOpen] = useState(false);
+  const handleEdit = (banner) => {
+    setFormData({
+      imageLink: banner.imageLink,
+      couponCode: banner.couponCode,
+      bannerId: banner._id,
+    });
+    setPreview(`http://localhost:3000/Public/image/${banner.image}`);
+    setIsEditMode(true);
+    openModal();
+  };
+
+  const handleDelete = async (bannerId) => {
+    if (!window.confirm("Are you sure you want to delete this banner?")) return;
+
+    try {
+      await axios.delete(`http://localhost:3000/api/admin/banner/${bannerId}`);
+      fetchBanners(); // Refresh the banner list
+      alert("Banner deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting banner:", error);
+      alert("Failed to delete banner");
+    }
+  };
 
   const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
+  const closeModal = () => {
+    setModalOpen(false);
+    resetForm();
+  };
 
- 
   return (
-    <div className="flex flex-col  w-full overflow-auto">
-      <div className="bg-white rounded-xl my-5 mx-5 p-8 shadow-lg w-80%  ">
+    <div className="flex flex-col w-full overflow-auto">
+      <div className="bg-white rounded-xl my-5 mx-5 p-8 shadow-lg w-80%">
         <p className="text-xl font-bold mb-5">Add New Banner</p>
         <button
           onClick={openModal}
-          className="  bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 shadow-lg transform hover:-translate-y-0.5 transition-all duration-300"
+          className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 shadow-lg transform hover:-translate-y-0.5 transition-all duration-300"
         >
           Add Banner
         </button>
@@ -84,12 +147,16 @@ export default function DiscountBanner() {
             <input
               type="file"
               name="Image"
-              placeholder="First Name"
               onChange={handleFileChange}
-              className="w-full py-2  focus:outline-none   cursor-pointer"
+              className="w-full py-2 focus:outline-none cursor-pointer"
             />
-            {preview && <img src={preview} alt="Preview" width="200px" />}
-
+            {preview && (
+              <img
+                src={preview}
+                alt="Preview"
+                className="mt-2 max-h-40 object-contain"
+              />
+            )}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
             <div>
@@ -100,19 +167,19 @@ export default function DiscountBanner() {
                 placeholder="Add link"
                 value={formData.imageLink}
                 onChange={handleInputChange}
-                className="w-full py-2 border rounded-lg px-2  focus:outline-none "
+                className="w-full py-2 border rounded-lg px-2 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block px-2  text-sm mb-2">Coupon Code</label>
+              <label className="block px-2 text-sm mb-2">Coupon Code</label>
               <input
                 type="text"
                 name="couponCode"
                 value={formData.couponCode}
                 placeholder="Enter Coupon Code"
                 onChange={handleInputChange}
-                className="w-full py-2 border px-2 rounded-lg focus:outline-none "
+                className="w-full py-2 border px-2 rounded-lg focus:outline-none"
               />
             </div>
           </div>
@@ -126,47 +193,51 @@ export default function DiscountBanner() {
             </button>
             <button
               className="mt-6 bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 shadow-lg transform hover:-translate-y-0.5 transition-all duration-300"
-              // onClick={closeModal}
-              onClick={handleUpload}
+              onClick={handleSubmit}
             >
-              Save
+              {isEditMode ? "Update" : "Save"}
             </button>
           </div>
         </Modal>
       </div>
-      <div className="bg-white rounded-xl my-5 mx-5 p-8 shadow-lg w-80%  ">
+      <div className="bg-white rounded-xl my-5 mx-5 p-8 shadow-lg w-80%">
         <p className="text-xl font-bold p-3 pt-0">Previous Banners</p>
         <div className="flex flex-col gap-5 justify-between">
           <div className="flex flex-row bg-black justify-between border-b p-4 rounded-lg">
-            <p className="font-black text-white mr-36">Image</p>
-            <p className="font-black text-white mr-44">Image Link</p>
-            <p className="font-black text-white ">Coupon</p>
-            <p className="font-black text-white ">Action</p>
+            <p className="font-black text-white w-1/4">Image</p>
+            <p className="font-black text-white w-1/4">Image Link</p>
+            <p className="font-black text-white w-1/4">Coupon</p>
+            <p className="font-black text-white w-1/4">Action</p>
           </div>
-          {previousBanners.map((banner, index) => (
+          {banners.map((banner, index) => (
             <div
-              className="flex flex-row justify-between border-b p-2"
+              className="flex flex-row justify-between border-b p-2 items-center"
               key={index}
             >
-              <div className="flex flex-col gap-2 items-center justify-center">
+              <div className="w-1/4">
                 <img
-                  className="h-10 w-18"
-                  src={banner.imageUrl}
+                  className="h-20 w-auto object-contain"
+                  src={`http://localhost:3000/image/${banner.image}`}
                   alt="bannerImage"
                 />
               </div>
-              <div className="flex flex-col gap-2 items-center justify-center">
-                <p>{banner.imageLink}</p>
+              <div className="w-1/4">
+                <p className="truncate">{banner.imageLink}</p>
               </div>
-
-              <div className="flex flex-col gap-2 items-center justify-center">
-                <p>{banner.coupon}</p>
+              <div className="w-1/4">
+                <p>{banner.couponCode}</p>
               </div>
-              <div className="flex flex-row items-center justify-center gap-8">
-                <button className=" ">
+              <div className="flex flex-row items-center justify-center gap-8 w-1/4">
+                <button
+                  className="text-blue-600 hover:text-blue-800"
+                  onClick={() => handleEdit(banner)}
+                >
                   <EditIcon />
                 </button>
-                <button className="pb-1">
+                <button
+                  className="text-red-600 hover:text-red-800"
+                  onClick={() => handleDelete(banner._id)}
+                >
                   <RiDeleteBin6Line className="h-5 w-5" />
                 </button>
               </div>
@@ -177,51 +248,6 @@ export default function DiscountBanner() {
     </div>
   );
 }
-
-// const options = [
-//   { value: "Kurtas", label: "Kurtas" },
-//   { value: "Dresses", label: "Dresses" },
-//   { value: "Bottoms", label: "Bottoms" },
-// ];
-// const Suboptions = [
-//   { value: "Kurtas", label: "Kurtas" },
-//   { value: "Dresses", label: "Dresses" },
-//   { value: "Bottoms", label: "Bottoms" },
-// ];
-const previousBanners = [
-  {
-    imageUrl:
-      "https://www.libas.in/cdn/shop/files/desktop-eoss_b47b3d2e-63c3-4a33-9858-340255cc1dfb.jpg?v=1735982857&width=2400",
-    imageLink: "https://www.libas.in/collections/sale?filter.v.availability=1",
-    category: ["Kurtas"],
-    subCategory: ["Kurtas"],
-    coupon: "SB25",
-  },
-  {
-    imageUrl:
-      "https://www.libas.in/cdn/shop/files/desktop-eoss_b47b3d2e-63c3-4a33-9858-340255cc1dfb.jpg?v=1735982857&width=2400",
-    imageLink: "https://www.libas.in/collections/sale?filter.v.availability=1",
-    category: ["Bottoms"],
-    subCategory: ["Kurtas"],
-    coupon: "SB25",
-  },
-  {
-    imageUrl:
-      "https://www.libas.in/cdn/shop/files/desktop-eoss_b47b3d2e-63c3-4a33-9858-340255cc1dfb.jpg?v=1735982857&width=2400",
-    imageLink: "https://www.libas.in/collections/sale?filter.v.availability=1",
-    category: ["Bottoms"],
-    subCategory: ["Kurtas"],
-    coupon: "SB25",
-  },
-  {
-    imageUrl:
-      "https://www.libas.in/cdn/shop/files/desktop-eoss_b47b3d2e-63c3-4a33-9858-340255cc1dfb.jpg?v=1735982857&width=2400",
-    imageLink: "https://www.libas.in/collections/sale?filter.v.availability=1",
-    category: ["Bottoms"],
-    subCategory: ["Kurtas"],
-    coupon: "SB25",
-  },
-];
 
 function EditIcon() {
   return (

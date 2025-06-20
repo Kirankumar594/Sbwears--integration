@@ -1,19 +1,117 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Modal from "./Modal";
+import axios from "axios";
 
 export default function AddSize() {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [sizeName, setSizeName] = useState("");
+  const [sizes, setSizes] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  const [currentSizeId, setCurrentSizeId] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch sizes on component mount
+  useEffect(() => {
+    fetchSizes();
+  }, []);
+
+  // const fetchSizes = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await axios.get("http://localhost:3000/api/admin/productManagement/size");  
+      
+  //     setSizes(response.data);    
+      
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error("Error fetching sizes:", error);
+  //     setLoading(false);
+  //     alert("Failed to fetch sizes");
+  //   }
+  // };   
+  
+  const fetchSizes = async () => {
+  try {
+    setLoading(true);
+    const response = await axios.get("http://localhost:3000/api/admin/productManagement/size");
+    console.log(response, "response from fetchSizes");
+    setSizes(response.data);
+    setLoading(false);
+  } catch (error) {
+    console.error("Error fetching sizes:", error);
+    setLoading(false);
+    alert("Failed to fetch sizes");
+  }
+};
+
+
+  const handleSubmit = async () => {
+    if (!sizeName.trim()) {
+      alert("Size name cannot be empty");
+      return;
+    }
+
+    try {
+      if (editMode && currentSizeId) {
+        // Update existing size
+        await axios.post(`http://localhost:3000/api/admin/productManagement/size`, {
+          Size: sizeName,
+          sizeId: currentSizeId
+        });
+        alert("Size updated successfully");
+      } else {
+        // Add new size
+        await axios.post("http://localhost:3000/api/admin/productManagement/size", {
+          Size: sizeName
+        });
+        alert("Size added successfully");
+      }
+
+      fetchSizes(); // Refresh the list
+      closeModal();
+    } catch (error) {
+      console.error("Error saving size:", error);
+      alert(error.response?.data?.error || "Failed to save size");
+    }
+  };
+
+  const handleEdit = (size) => {
+    setSizeName(size.Size);
+    setCurrentSizeId(size._id);
+    setEditMode(true);
+    openModal();
+  };
+
+  const handleDelete = async (sizeId) => {
+    if (!window.confirm("Are you sure you want to delete this size?")) return;
+
+    try {
+      await axios.delete(`http://localhost:3000/api/admin/productManagement/size/${sizeId}`);
+      alert("Size deleted successfully");
+      fetchSizes(); // Refresh the list
+    } catch (error) {
+      console.error("Error deleting size:", error);
+      alert("Failed to delete size");
+    }
+  };
 
   const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
+  const closeModal = () => {
+    setModalOpen(false);
+    setSizeName("");
+    setEditMode(false);
+    setCurrentSizeId(null);
+  };   
+
+
   return (
-    <div className="flex flex-col  w-full overflow-auto">
-      <div className="bg-white rounded-xl my-5 mx-5 p-8 shadow-lg w-80%  ">
-        <p className="text-xl font-bold mb-5 ">Add New Size</p>
+    <div className="flex flex-col w-full overflow-auto">
+      <div className="bg-white rounded-xl my-5 mx-5 p-8 shadow-lg w-80%">
+        <p className="text-xl font-bold mb-5">Add New Size</p>
         <button
           onClick={openModal}
-          className="  bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 shadow-lg transform hover:-translate-y-0.5 transition-all duration-300"
+          className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 shadow-lg transform hover:-translate-y-0.5 transition-all duration-300"
         >
           Add Size
         </button>
@@ -22,7 +120,9 @@ export default function AddSize() {
             type="text"
             name="Size"
             placeholder="Add Size"
-            className=" py-2 border mr-3 rounded-lg px-2  focus:outline-none "
+            value={sizeName}
+            onChange={(e) => setSizeName(e.target.value)}
+            className="w-full py-2 border rounded-lg px-2 focus:outline-none"
           />
           <div className="flex flex-row justify-between">
             <button
@@ -33,70 +133,55 @@ export default function AddSize() {
             </button>
             <button
               className="mt-6 bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 shadow-lg transform hover:-translate-y-0.5 transition-all duration-300"
-              onClick={closeModal}
+              onClick={handleSubmit}
             >
-              Save
+              {editMode ? "Update" : "Save"}
             </button>
           </div>
         </Modal>
       </div>
-      <div className="bg-white rounded-xl my-5 mx-5 p-8 shadow-lg w-80%  ">
+      <div className="bg-white rounded-xl my-5 mx-5 p-8 shadow-lg w-80%">
         <p className="text-xl font-bold p-3 pt-0">Previous Added Sizes</p>
-        <div className="flex flex-col gap-5 w-2/5">
-          <div className="flex flex-row bg-black justify-between border-b p-4 rounded-lg">
-            <p className="font-black text-white">Sizes</p>
-            <p className="font-black mr-3 text-white"> Action</p>
+        {loading ? (
+          <div className="flex justify-center items-center py-8">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
           </div>
-          {sizes.map((size, index) => (
-            <div
-              className="flex flex-row justify-between border-b p-2"
-              key={index}
-            >
-              <div className="flex flex-col gap-2 items-center justify-center">
-                <p>{size.size}</p>
-              </div>
-              <div className="flex flex-row items-center justify-center gap-8">
-                <button className=" ">
-                  <EditIcon />
-                </button>
-                <button className="pb-1">
-                  <RiDeleteBin6Line className="h-5 w-5" />
-                </button>
-              </div>
+        ) : (
+          <div className="flex flex-col gap-5 w-2/5">
+            <div className="flex flex-row bg-black justify-between border-b p-4 rounded-lg">
+              <p className="font-black text-white">Sizes</p>
+              <p className="font-black mr-3 text-white">Action</p>
             </div>
-          ))}
-        </div>
+            {sizes.map((size, index) => (
+              <div
+                className="flex flex-row justify-between border-b p-2 items-center"
+                key={index}
+              >
+                <div className="flex flex-col gap-2 items-center justify-center">
+                  <p>{size.Size}</p>
+                </div>
+                <div className="flex flex-row items-center justify-center gap-8">
+                  <button
+                    className="text-blue-600 hover:text-blue-800"
+                    onClick={() => handleEdit(size)}
+                  >
+                    <EditIcon />
+                  </button>
+                  <button
+                    className="text-red-600 hover:text-red-800"
+                    onClick={() => handleDelete(size._id)}
+                  >
+                    <RiDeleteBin6Line className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
-const sizes = [
-  {
-    id: 1,
-    size: "XS",
-  },
-  {
-    id: 2,
-    size: "S",
-  },
-  {
-    id: 3,
-    size: "M",
-  },
-  {
-    id: 4,
-    size: "L",
-  },
-  {
-    id: 5,
-    size: "XL",
-  },
-  {
-    id: 6,
-    size: "XXL",
-  },
-];
 
 function EditIcon() {
   return (
