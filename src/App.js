@@ -25,7 +25,7 @@ function App() {
       <>
         {location.pathname === "/contact" && <Navbar />}
         {location.pathname === "/productsList" && <Navbar />}
-        {location.pathname === "/product" && <Navbar />}
+        {/* {location.pathname === "/product/:id" && <Navbar />} */}
         {location.pathname === "/account" && <Navbar />}
         {location.pathname === "/trackorder" && <Navbar />}   
         {children}
@@ -41,7 +41,7 @@ function App() {
           <Route path="/" element={<><Home /> <Footer /> </>} />
           <Route path="/contact" element={<><Contact /> <Footer /> </>} />
           <Route path="/productsList" element={<><ProductsListing /> <Footer /> </>} />
-          <Route path="/product" element={<><ProductPage /> <Footer /> </>} />
+          <Route path="/product/:id" element={<><Navbar/><ProductPage /> <Footer /> </>} />
           <Route path="/car" element={<><Carousel /> <Footer /> </>} />
           <Route path="/account" element={<><Profile /> <Footer /> </>} />
           <Route path="/trackorder" element={<><TrackOrder /> <Footer /> </>} />
@@ -68,25 +68,25 @@ export default App;
 
 //   return (
 //     <div className="p-8">
-//       <h1 className="text-2xl font-bold mb-4">React Modal with Tailwind</h1>
+//       <h1 className="mb-4 text-2xl font-bold">React Modal with Tailwind</h1>
 
 //       {/* Button to Open Modal */}
 //       <button
 //         onClick={openModal}
-//         className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+//         className="px-4 py-2 text-white bg-indigo-600 rounded hover:bg-indigo-700"
 //       >
 //         Open Modal
 //       </button>
 
 //       {/* Modal Component */}
 //       <Modal isOpen={isModalOpen} onClose={closeModal}>
-//         <h2 className="text-lg font-bold mb-4">This is a Modal</h2>
-//         <p className="text-gray-700 mb-4">
+//         <h2 className="mb-4 text-lg font-bold">This is a Modal</h2>
+//         <p className="mb-4 text-gray-700">
 //           You can pass any content here using the `children` prop.
 //         </p>
 //         <button
 //           onClick={closeModal}
-//           className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+//           className="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700"
 //         >
 //           Close Modal
 //         </button>
