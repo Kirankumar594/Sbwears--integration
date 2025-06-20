@@ -30,7 +30,9 @@ import { AiOutlineStock } from "react-icons/ai";
 import AbandonedCart from "../components/AbandonedCart.jsx";
 import Customer from "../components/Customer.jsx";
 import Orders from "../components/Orders.jsx";
-import Transaction from "../components/Transaction.jsx";
+import Transaction from "../components/Transaction.jsx"; 
+import { LogOutIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const FilterSection = ({ title, isOpen, onToggle, icon, children }) => {
   return (
@@ -87,6 +89,7 @@ export default function Dashboard() {
       [section]: !prev[section],
     }));
   };
+  const navigate = useNavigate()
 
   return (
     <div className="flex flex-row gap-2">
@@ -113,7 +116,7 @@ export default function Dashboard() {
             </span>
           </button>
         </div>
-        <FilterSection
+        {/* <FilterSection
           icon={<BiCategoryAlt className="size-5  ml-8" />}
           title="OCCASION"
           isOpen={openSections.topDis}
@@ -135,7 +138,7 @@ export default function Dashboard() {
               </span>
             </div>
           </div>
-        </FilterSection>
+        </FilterSection> */}
         <div
           className={`border-b border-gray-200 cursor-pointer hover:bg-gray-100 ${component === "Category" ? "bg-gray-200" : "bg-white"}`}
           onClick={() => handleComponent("Category")}
@@ -196,7 +199,8 @@ export default function Dashboard() {
             </span>
           </button>
         </div> */}
-        <FilterSection
+
+        {/* <FilterSection
           icon={<MdAddShoppingCart className="size-5  ml-8" />}
           title="PRODUCT"
           isOpen={openSections.AddProduct}
@@ -218,8 +222,19 @@ export default function Dashboard() {
               </span>
             </div>
           </div>
-        </FilterSection>
+        </FilterSection> */}
 
+        <div
+          className={`border-b border-gray-200 cursor-pointer hover:bg-gray-100 ${component === "Product" ? "bg-gray-200" : "bg-white"}`}
+          // onClick={() => handleComponent("Stock")}
+          onClick={() => handleComponent("Product")}
+        >
+          <button className="w-full py-4  flex gap-3 items-center text-left">
+            {/* <AiOutlineStock className="w-5 h-5 ml-8" /> */}
+             <MdAddShoppingCart className="size-5  ml-8" />
+            <span className="text-sm tracking-widest  font-medium">PRODUCT</span>
+          </button>
+        </div>
         <div
           className={`border-b border-gray-200 cursor-pointer hover:bg-gray-100 ${component === "Stock" ? "bg-gray-200" : "bg-white"}`}
           onClick={() => handleComponent("Stock")}
@@ -280,6 +295,21 @@ export default function Dashboard() {
             <IoCallOutline className="size-5 ml-8" />
             <span className="text-sm tracking-widest  font-medium">
               CONTACT
+            </span>
+          </button>
+        </div>
+        <div
+          className={`border-b border-gray-200 cursor-pointer hover:bg-gray-300 bg-gray-200`}
+          onClick={() =>{
+            localStorage.clear()
+            navigate("/admin/login")
+          } 
+        }
+        >
+          <button className="w-full py-4  flex gap-3 items-center text-left">
+            <LogOutIcon className="size-5 ml-8" />
+            <span className="text-sm tracking-widest  font-medium">
+              LOGOUT
             </span>
           </button>
         </div>

@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer";
@@ -34,6 +35,16 @@ function App() {
     );
   };
 
+  function ProtectedRoute({ element, path }) { 
+    const isAuthenticated = localStorage.getItem("adminToken")
+    console.log("isAuthenticated : " , isAuthenticated)
+    return isAuthenticated  ? (
+      element
+    ) : (
+      <Navigate to="/admin/login" />
+    );
+  }
+
   return (
     <Router>
       <Layout>
@@ -47,7 +58,17 @@ function App() {
           <Route path="/trackorder" element={<><TrackOrder /> <Footer /> </>} />
           <Route path="/checkout" element={<><Checkout /> <Footer /> </>} />
           <Route path="/admin/login" element={<><Login />  </>} />
-          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route
+            index
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute
+                path="/admin/dashboard"
+                element={ <Dashboard /> }
+              />
+            }
+          />
+          {/* <Route path="/admin/dashboard" element={<Dashboard />}/>   */}
         </Routes>
       </Layout>
     </Router>
