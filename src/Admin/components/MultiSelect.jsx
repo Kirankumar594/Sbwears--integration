@@ -1,23 +1,23 @@
 import React from "react";
 import Select from "react-select";
 
-const MultiSelect = ({ options }) => {
+const MultiSelect = ({ options, value, onChange }) => {
   const customStyles = {
     control: (provided) => ({
       ...provided,
       padding: "2px",
-      border: "1px solid gray", // Tailwind `border-gray-300`
-      borderRadius: "0.375rem", // Tailwind `rounded-md`
+      border: "1px solid gray",
+      borderRadius: "0.375rem",
       boxShadow: "none",
       "&:hover": {
-        borderColor: "black", // Tailwind `border-indigo-500`
+        borderColor: "black",
       },
     }),
     multiValue: (provided) => ({
       ...provided,
-      backgroundColor: "black", // Tailwind `bg-indigo-500`
+      backgroundColor: "black",
       color: "white",
-      borderRadius: "0.375rem", // Tailwind `rounded-md`
+      borderRadius: "0.375rem",
     }),
     multiValueLabel: (provided) => ({
       ...provided,
@@ -27,17 +27,23 @@ const MultiSelect = ({ options }) => {
       ...provided,
       color: "white",
       "&:hover": {
-        backgroundColor: "black", // Tailwind `bg-indigo-600`
+        backgroundColor: "black",
         color: "white",
       },
     }),
   };
 
+  const selected = options.filter((opt) => value.includes(opt.value));
+
   return (
     <div className="w-full">
       <Select
-        options={options}
         isMulti
+        options={options}
+        value={selected}
+        onChange={(selectedOptions) =>
+          onChange(selectedOptions.map((opt) => opt.value))
+        }
         styles={customStyles}
         placeholder="Select options"
       />

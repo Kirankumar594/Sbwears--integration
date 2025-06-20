@@ -68,9 +68,9 @@ const Navbar = () => {
           `}
         >
           <div className="flex items-center gap-5 lg:mr-32 md:32">
-            <div className="cursor-pointer" onClick={toggleMenu}>
+            {/* <div className="cursor-pointer" onClick={toggleMenu}>
               <IoMdMenu className="h-5 w-5" />
-            </div>
+            </div> */}
             <p className="cursor-pointer ">
               <CiSearch className="h-5 w-5" onClick={openSearch} />
             </p>
@@ -150,12 +150,12 @@ const Navbar = () => {
 
             {isLoginOpen && <Login />}
 
-            <a href="trackorder">
+            {/* <a href="trackorder">
               <RiTelegram2Line className="hidden sm:block h-6 w-6" />
             </a>
             <a href="account">
               <FaRegHeart className="  h-5 w-5" />
-            </a>
+            </a> */}
             <button
               className="relative flex items-center space-x-2  py-1 rounded-md"
               onClick={toggleCart}

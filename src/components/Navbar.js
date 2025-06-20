@@ -2,8 +2,7 @@ import React from 'react';
 import SB from './Assets/SB_WEARS.png';
 import S1 from './Assets/sb_wears.jpg';
 import shirt from './Assets/cloth2.jpg';
-
-
+ 
 const Navbar = () => {
   return (
     <div>
@@ -32,7 +31,7 @@ const Navbar = () => {
       </div>
 
      
-      <div className="flex items-center space-x-4">
+      {/* <div className="flex items-center space-x-4">
         
         <button className="text-black text-3xl flex items-center space-x-1">
           <span>♡</span>
@@ -44,7 +43,7 @@ const Navbar = () => {
           <span>🛒</span>
           
         </button>
-      </div>
+      </div> */}
     </nav>
 
     <div className="flex justify-left space-x-4 bg-gray-100 py-3">
