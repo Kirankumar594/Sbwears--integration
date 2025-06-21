@@ -19,32 +19,33 @@ export default function AddSize() {
   // const fetchSizes = async () => {
   //   try {
   //     setLoading(true);
-  //     const response = await axios.get("http://localhost:3000/api/admin/productManagement/size");  
-      
-  //     setSizes(response.data);    
-      
+  //     const response = await axios.get("https://sbwears.com/api/admin/productManagement/size");
+
+  //     setSizes(response.data);
+
   //     setLoading(false);
   //   } catch (error) {
   //     console.error("Error fetching sizes:", error);
   //     setLoading(false);
   //     alert("Failed to fetch sizes");
   //   }
-  // };   
-  
-  const fetchSizes = async () => {
-  try {
-    setLoading(true);
-    const response = await axios.get("http://localhost:3000/api/admin/productManagement/size");
-    console.log(response, "response from fetchSizes");
-    setSizes(response.data);
-    setLoading(false);
-  } catch (error) {
-    console.error("Error fetching sizes:", error);
-    setLoading(false);
-    alert("Failed to fetch sizes");
-  }
-};
+  // };
 
+  const fetchSizes = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        "https://sbwears.com/api/admin/productManagement/size"
+      );
+      console.log(response, "response from fetchSizes");
+      setSizes(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching sizes:", error);
+      setLoading(false);
+      alert("Failed to fetch sizes");
+    }
+  };
 
   const handleSubmit = async () => {
     if (!sizeName.trim()) {
@@ -55,16 +56,22 @@ export default function AddSize() {
     try {
       if (editMode && currentSizeId) {
         // Update existing size
-        await axios.post(`http://localhost:3000/api/admin/productManagement/size`, {
-          Size: sizeName,
-          sizeId: currentSizeId
-        });
+        await axios.post(
+          `https://sbwears.com/api/admin/productManagement/size`,
+          {
+            Size: sizeName,
+            sizeId: currentSizeId,
+          }
+        );
         alert("Size updated successfully");
       } else {
         // Add new size
-        await axios.post("http://localhost:3000/api/admin/productManagement/size", {
-          Size: sizeName
-        });
+        await axios.post(
+          "https://sbwears.com/api/admin/productManagement/size",
+          {
+            Size: sizeName,
+          }
+        );
         alert("Size added successfully");
       }
 
@@ -87,7 +94,9 @@ export default function AddSize() {
     if (!window.confirm("Are you sure you want to delete this size?")) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/admin/productManagement/size/${sizeId}`);
+      await axios.delete(
+        `https://sbwears.com/api/admin/productManagement/size/${sizeId}`
+      );
       alert("Size deleted successfully");
       fetchSizes(); // Refresh the list
     } catch (error) {
@@ -102,8 +111,7 @@ export default function AddSize() {
     setSizeName("");
     setEditMode(false);
     setCurrentSizeId(null);
-  };   
-
+  };
 
   return (
     <div className="flex flex-col w-full overflow-auto">

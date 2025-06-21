@@ -116,7 +116,7 @@
 //                 <img src="https://www.libas.in/cdn/shop/files/R-2.jpg?v=1736393431&width=1080" className="size-60 object-cover" alt="img"/>
 //                 <img src="https://www.libas.in/cdn/shop/files/R-1.jpg?v=1736441350&width=1800" className="size-60 object-cover" alt="img"/>
 //             </div>
-//             <div className="flex flex-row gap-5"> 
+//             <div className="flex flex-row gap-5">
 //                  <img src="https://www.libas.in/cdn/shop/files/R-4.jpg?v=1736441350&width=1800" className="size-60 object-cover" alt="img"/>
 //                 <img src="https://www.libas.in/cdn/shop/files/R-3.jpg?v=1736441350&width=1800" className="size-60 object-cover" alt="img"/>
 //             </div>
@@ -155,7 +155,7 @@ export default function OccViewProduct({ product }) {
           <TabsTrigger value="Chart">Chart / Catalog</TabsTrigger>
           <TabsTrigger value="Gallery">Product Gallery</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="Info">
           <div className="bg-white shadow-md rounded-lg p-6 mt-5 max-w-3xl mx-auto">
             <table className="w-full border-collapse border-spacing-0">
@@ -170,7 +170,9 @@ export default function OccViewProduct({ product }) {
                   <td className="py-4 px-6 font-semibold text-gray-600">
                     Category
                   </td>
-                  <td className="py-4 px-6">{product?.category || "Mehendi Magic"}</td>
+                  <td className="py-4 px-6">
+                    {product?.category || "Mehendi Magic"}
+                  </td>
                 </tr>
                 <tr className="border-b">
                   <td className="py-4 px-6 font-semibold text-gray-600">Tag</td>
@@ -180,7 +182,9 @@ export default function OccViewProduct({ product }) {
                   <td className="py-4 px-6 font-semibold text-gray-600">
                     Fabric
                   </td>
-                  <td className="py-4 px-6">{product?.fabric || "Georgette"}</td>
+                  <td className="py-4 px-6">
+                    {product?.fabric || "Georgette"}
+                  </td>
                 </tr>
                 <tr className="border-b">
                   <td className="py-4 px-6 font-semibold text-gray-600">
@@ -215,7 +219,13 @@ export default function OccViewProduct({ product }) {
                     Status
                   </td>
                   <td className="py-4 px-6">
-                    <span className={`${product?.status ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"} text-sm font-medium px-3 py-1 rounded-full`}>
+                    <span
+                      className={`${
+                        product?.status
+                          ? "bg-green-100 text-green-600"
+                          : "bg-red-100 text-red-600"
+                      } text-sm font-medium px-3 py-1 rounded-full`}
+                    >
                       {product?.status ? "Active" : "Inactive"}
                     </span>
                   </td>
@@ -249,29 +259,35 @@ export default function OccViewProduct({ product }) {
         </TabsContent>
 
         <TabsContent value="Desc">
-          <div className="p-5" dangerouslySetInnerHTML={renderHTML(
-            product?.description || 
-            "<p>The Zarina ensemble is a glamorous 3-piece georgette straight suit set in a luxurious wine hue. A beautiful melange of mirrorwork, sequins, and embroidery on both the kurta and the palazzos is here to put the spotlight on you. Add bling to all your celebrations with the Zarina outfit.</p>"
-          )} />
+          <div
+            className="p-5"
+            dangerouslySetInnerHTML={renderHTML(
+              product?.description ||
+                "<p>The Zarina ensemble is a glamorous 3-piece georgette straight suit set in a luxurious wine hue. A beautiful melange of mirrorwork, sequins, and embroidery on both the kurta and the palazzos is here to put the spotlight on you. Add bling to all your celebrations with the Zarina outfit.</p>"
+            )}
+          />
         </TabsContent>
 
         <TabsContent value="AddInfo">
-          <div className="p-5" dangerouslySetInnerHTML={renderHTML(
-            product?.additionalInfo || 
-            "<ul>" +
-            "<li>Top Fabric: Georgette</li>" +
-            "<li>Bottom Fabric: Silk Blend</li>" +
-            "<li>Dupatta Fabric: Poly Georgette</li>" +
-            "<li>Dry Clean Only</li>" +
-            "</ul>"
-          )} />
+          <div
+            className="p-5"
+            dangerouslySetInnerHTML={renderHTML(
+              product?.additionalInfo ||
+                "<ul>" +
+                  "<li>Top Fabric: Georgette</li>" +
+                  "<li>Bottom Fabric: Silk Blend</li>" +
+                  "<li>Dupatta Fabric: Poly Georgette</li>" +
+                  "<li>Dry Clean Only</li>" +
+                  "</ul>"
+            )}
+          />
         </TabsContent>
 
         <TabsContent value="Chart">
           <div className="m-5">
             {product?.sizeChart ? (
               <img
-                src={`http://localhost:3000/image/${product.sizeChart}`}
+                src={`https://sbwears.com/image/${product.sizeChart}`}
                 className="size-72"
                 alt="Size Chart"
               />
@@ -293,7 +309,7 @@ export default function OccViewProduct({ product }) {
                   {product.images.slice(0, 2).map((img, index) => (
                     <img
                       key={index}
-                      src={`http://localhost:3000/image/${img}`}
+                      src={`https://sbwears.com/image/${img}`}
                       className="size-60 rounded"
                       alt={`Product ${index + 1}`}
                     />
@@ -304,7 +320,7 @@ export default function OccViewProduct({ product }) {
                     {product.images.slice(2).map((img, index) => (
                       <img
                         key={index + 2}
-                        src={`http://localhost:3000/uploads/${img}`}
+                        src={`https://sbwears.com/uploads/${img}`}
                         className="size-60 object-cover rounded"
                         alt={`Product ${index + 3}`}
                       />

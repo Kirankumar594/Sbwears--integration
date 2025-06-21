@@ -16,6 +16,7 @@ import { MdAccountCircle } from "react-icons/md";
 import Cart from "../components/Cart.jsx";
 import { FiShoppingCart } from "react-icons/fi";
 import Login from "../components/Login.jsx";
+import axios from "axios";
 // import SearchBar from '../components/SearchBar.jsx'
 
 const Home = () => {
@@ -81,16 +82,24 @@ const Home = () => {
       navigate(`/category?search=${search}`);
     }
   };
+
+  
+
+
+
+
+
+  
   return (
-    <div className="h-full w-full">
+    <div className="w-full h-full">
       <nav
         className={`fixed z-50 w-full px-5 lg:px-14 md:14 ${
           isScrolled ? "bg-white  " : "bg-transparent"
         }`}
       >
-        <div className="flex justify-between items-center py-2 lg:py-6 md:py-6">
-          <div className="flex gap-3 lg:gap-4 md:gap-4 items-center text-tiny">
-            <div
+        <div className="flex items-center justify-between py-2 lg:py-6 md:py-6">
+          <div className="flex items-center gap-3 lg:gap-4 md:gap-4 text-tiny">
+            {/* <div
               className="flex flex-row gap-1 cursor-pointer"
               onClick={toggleMenu}
             >
@@ -106,7 +115,7 @@ const Home = () => {
               >
                 MENU
               </div>
-            </div>
+            </div> */}
             <div
               className="flex flex-row gap-1 cursor-pointer"
               onClick={openSearch}
@@ -131,7 +140,7 @@ const Home = () => {
               } `}
             >
             
-                <div className="flex flex-row w-full items-center gap-2">
+                <div className="flex flex-row items-center w-full gap-2">
                   <CiSearch className={`h-5 w-5 ${isScrolled ? "text-black ": "text-white"}`} />
                   <form onSubmit={handleSearch}> 
                     <input 
@@ -151,12 +160,12 @@ const Home = () => {
               </div>
             )}
           </div>
-          <div className="flex flex-col justify-center items-center">
-            <a href="/" className="flex flex-row justify-center items-center">
+          <div className="flex flex-col items-center justify-center">
+            <a href="/" className="flex flex-row items-center justify-center">
               {isScrolled ? (
-                <img className="size-16 mr-4" src={logo} alt="logo" />
+                <img className="mr-4 size-16" src={logo} alt="logo" />
               ) : (
-                <img className="size-16 mr-4" src={whiteLogo} alt="logo" />
+                <img className="mr-4 size-16" src={whiteLogo} alt="logo" />
               )}{" "}
               <p
                 className={` font-serif ${
@@ -167,7 +176,7 @@ const Home = () => {
               </p>
             </a>
           </div>
-          <div className="flex gap-2 md:gap-8 lg:gap-8  items-center  text-tiny">
+          <div className="flex items-center gap-2 md:gap-8 lg:gap-8 text-tiny">
             <a
               href="/contact"
               className={`hidden lg:block md:block tracking-wide ${
@@ -177,7 +186,7 @@ const Home = () => {
               CONTACT US
             </a>
             <div
-              className="hidden sm:block text-black cursor-pointer"
+              className="hidden text-black cursor-pointer sm:block"
               onClick={toggleAccount}
             >
               <p
@@ -189,13 +198,13 @@ const Home = () => {
               </p>
             </div>
             {isAccountOpen && (
-              <div className="absolute top-16 right-10 mt-2 bg-white shadow-lg border rounded-md z-50 w-48">
+              <div className="absolute z-50 w-48 mt-2 bg-white border rounded-md shadow-lg top-16 right-10">
                 <div className="flex flex-col gap-3 p-4">
-                  <button className="text-left hover:bg-gray-100 px-2 py-1 rounded-md">
+                  <button className="px-2 py-1 text-left rounded-md hover:bg-gray-100">
                     <a href="account">My Account</a>
                   </button>
                   <button
-                    className="text-left border hover:bg-gray-100 px-2 py-1 rounded-md"
+                    className="px-2 py-1 text-left border rounded-md hover:bg-gray-100"
                     onClick={toggleLogin}
                   >
                     Login
@@ -205,13 +214,13 @@ const Home = () => {
             )}
             {isLoginOpen && <Login />}
             <div className="flex justify-center gap-3 lg:gap-8 md:gap-8">
-              <a href="account">
+              {/* <a href="account">
                 <FaRegHeart
                   className={`w-5 h-5  ${
                     isScrolled ? "text-black" : "text-white"
                   }`}
                 />
-              </a>
+              </a> */}
               <FiShoppingCart
                 className={`w-5 h-5 cursor-pointer ${
                   isScrolled ? "text-black" : "text-white"
@@ -227,7 +236,7 @@ const Home = () => {
           }`}
           style={{ width: "100%", maxWidth: "400px" }}
         >
-          <div className="flex justify-between items-center p-4 border-b">
+          <div className="flex items-center justify-between p-4 border-b">
             <h2 className="text-lg font-black">Cart</h2>
             <button
               className="text-xl font-bold text-gray-700 hover:text-gray-900"
@@ -236,7 +245,7 @@ const Home = () => {
               <IoClose className="text-gray-500" />
             </button>
           </div>
-          <div className=" h-full">
+          <div className="h-full ">
             <Cart />
           </div>
         </div>
@@ -249,10 +258,10 @@ const Home = () => {
         >
           <div className="flex items-center justify-between p-4 border-b">
             <div className="flex items-center gap-2">
-              <MdAccountCircle className="h-8 w-8" />
+              <MdAccountCircle className="w-8 h-8" />
               <a href="account">
                 {" "}
-                <span className="tracking-widest text-sm">MY ACCOUNT</span>
+                <span className="text-sm tracking-widest">MY ACCOUNT</span>
               </a>
             </div>
             <button
@@ -268,7 +277,7 @@ const Home = () => {
         </div>
         {(isCartOpen || isMenuOpen || isAccountOpen) && (
           <div
-            className="fixed top-0 left-0 w-full h-full bg-black opacity-50 z-40"
+            className="fixed top-0 left-0 z-40 w-full h-full bg-black opacity-50"
             onClick={() => {
               setIsCartOpen(false);
               setIsMenuOpen(false);
@@ -280,8 +289,8 @@ const Home = () => {
       </nav>
       <Hero />
       <ShopByOccasions />
-      <ShopByCategories />
-      <ShopByCollections />
+      {/* <ShopByCategories /> */}
+      {/* <ShopByCollections /> */}
     </div>
   );
 };

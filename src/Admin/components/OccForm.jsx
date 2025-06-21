@@ -68,7 +68,7 @@
 //     const fetchCategories = async () => {
 //       try {
 //         setLoading(true);
-//         const response = await axios.get("http://localhost:3000/api/admin/product/category");
+//         const response = await axios.get("https://sbwears.com/api/admin/product/category");
 //         console.log("response : " , response)
 //         setCategories(response.data || []);
 //       } catch (err) {
@@ -78,7 +78,7 @@
 //         setLoading(false);
 //       }
 //     };
-  
+
 //     useEffect(() => {
 //       fetchCategories();
 //     }, []);
@@ -124,7 +124,7 @@
 //         }
 //       }
 
-//       const url = "http://localhost:3000/api/admin/category/product";
+//       const url = "https://sbwears.com/api/admin/category/product";
 //       const params = editingProduct ? { productId: editingProduct._id } : {};
 
 //       const response = await axios.post(url, formDataToSend, {
@@ -142,8 +142,8 @@
 //     } catch (error) {
 //       console.error("Submit error:", error);
 //       setError(
-//         error.response?.data?.error || 
-//         error.message || 
+//         error.response?.data?.error ||
+//         error.message ||
 //         "Failed to save product. Please check all required fields."
 //       );
 //     } finally {
@@ -374,7 +374,6 @@
 //   );
 // }
 
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Dropdown from "./DropDown";
@@ -382,7 +381,11 @@ import MultiSelect from "./MultiSelect";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
-export default function OccForm({ closeModal, editingProduct = null, onSuccess }) {
+export default function OccForm({
+  closeModal,
+  editingProduct = null,
+  onSuccess,
+}) {
   const [formData, setFormData] = useState({
     name: editingProduct?.name || "",
     mrp: editingProduct?.mrp || "",
@@ -397,10 +400,14 @@ export default function OccForm({ closeModal, editingProduct = null, onSuccess }
     productCategoryId: editingProduct?.productCategory?._id || "",
     status: editingProduct?.status ? "active" : "inactive",
   });
-  console.log("formData : " , formData)
+  console.log("formData : ", formData);
 
-  const [description, setDescription] = useState(editingProduct?.description || "");
-  const [additionalInfo, setAdditionalInfo] = useState(editingProduct?.additionalInfo || "");
+  const [description, setDescription] = useState(
+    editingProduct?.description || ""
+  );
+  const [additionalInfo, setAdditionalInfo] = useState(
+    editingProduct?.additionalInfo || ""
+  );
   const [files, setFiles] = useState({
     sizeChart: null,
     images: [],
@@ -413,12 +420,12 @@ export default function OccForm({ closeModal, editingProduct = null, onSuccess }
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [offerPrice, setOfferPrice] = useState(0);
-  console.log("colors : " , colors)
+  console.log("colors : ", colors);
   // Calculate offer price
   useEffect(() => {
     const mrp = parseFloat(formData.mrp) || 0;
     const discount = parseFloat(formData.discount) || 0;
-    const calculatedPrice = mrp - (mrp * (discount / 100));
+    const calculatedPrice = mrp - mrp * (discount / 100);
     setOfferPrice(calculatedPrice.toFixed(2));
   }, [formData.mrp, formData.discount]);
 
@@ -426,13 +433,14 @@ export default function OccForm({ closeModal, editingProduct = null, onSuccess }
   useEffect(() => {
     const fetchDropdownData = async () => {
       try {
-        const [colorRes, fabricRes, tagRes, sizeRes, categoryRes] = await Promise.all([
-          axios.get("http://localhost:3000/api/admin/productManagement/color"),
-          axios.get("http://localhost:3000/api/admin/productManagement/fabric"),
-          axios.get("http://localhost:3000/api/admin/productManagement/tag"),
-          axios.get("http://localhost:3000/api/admin/productManagement/size"),
-          axios.get("http://localhost:3000/api/admin/product/category"),
-        ]);
+        const [colorRes, fabricRes, tagRes, sizeRes, categoryRes] =
+          await Promise.all([
+            axios.get("https://sbwears.com/api/admin/productManagement/color"),
+            axios.get("https://sbwears.com/api/admin/productManagement/fabric"),
+            axios.get("https://sbwears.com/api/admin/productManagement/tag"),
+            axios.get("https://sbwears.com/api/admin/productManagement/size"),
+            axios.get("https://sbwears.com/api/admin/product/category"),
+          ]);
 
         setColors(colorRes.data || []);
         setFabrics(fabricRes.data || []);
@@ -480,7 +488,11 @@ export default function OccForm({ closeModal, editingProduct = null, onSuccess }
       if (!formData.name.trim()) {
         throw new Error("Product name is required");
       }
-      if (!formData.mrp || isNaN(formData.mrp) || parseFloat(formData.mrp) <= 0) {
+      if (
+        !formData.mrp ||
+        isNaN(formData.mrp) ||
+        parseFloat(formData.mrp) <= 0
+      ) {
         throw new Error("Valid MRP is required");
       }
       if (!formData.productCategoryId) {
@@ -490,17 +502,27 @@ export default function OccForm({ closeModal, editingProduct = null, onSuccess }
         throw new Error("At least one size is required");
       }
       if (!editingProduct && (!files.sizeChart || files.images.length === 0)) {
-        throw new Error("Size chart and at least one product image are required");
+        throw new Error(
+          "Size chart and at least one product image are required"
+        );
       }
-      if (formData.stocks && (isNaN(formData.stocks) || parseInt(formData.stocks) < 0)) {
+      if (
+        formData.stocks &&
+        (isNaN(formData.stocks) || parseInt(formData.stocks) < 0)
+      ) {
         throw new Error("Valid stock quantity is required");
       }
-      if (formData.Minstocks && (isNaN(formData.Minstocks) || parseInt(formData.Minstocks) < 0)) {
+      if (
+        formData.Minstocks &&
+        (isNaN(formData.Minstocks) || parseInt(formData.Minstocks) < 0)
+      ) {
         throw new Error("Valid minimum stock quantity is required");
       }
 
       // Map productCategoryId to category name
-      const selectedCategory = categories.find((cat) => cat._id === formData.productCategoryId);
+      const selectedCategory = categories.find(
+        (cat) => cat._id === formData.productCategoryId
+      );
       if (!selectedCategory) {
         throw new Error("Selected category is invalid");
       }
@@ -532,7 +554,7 @@ export default function OccForm({ closeModal, editingProduct = null, onSuccess }
         formDataToSend.append("image", file);
       });
 
-      const url = "http://localhost:3000/api/admin/category/product";
+      const url = "https://sbwears.com/api/admin/category/product";
       const config = {
         headers: { "Content-Type": "multipart/form-data" },
         params: editingProduct ? { productId: editingProduct._id } : {},
@@ -586,7 +608,9 @@ export default function OccForm({ closeModal, editingProduct = null, onSuccess }
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="col-span-2">
-            <label className="block text-sm font-medium mb-1">Product Name*</label>
+            <label className="block text-sm font-medium mb-1">
+              Product Name*
+            </label>
             <input
               type="text"
               name="name"
@@ -612,7 +636,9 @@ export default function OccForm({ closeModal, editingProduct = null, onSuccess }
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Discount (%)</label>
+            <label className="block text-sm font-medium mb-1">
+              Discount (%)
+            </label>
             <input
               type="number"
               name="discount"
@@ -626,7 +652,9 @@ export default function OccForm({ closeModal, editingProduct = null, onSuccess }
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Offer Price</label>
+            <label className="block text-sm font-medium mb-1">
+              Offer Price
+            </label>
             <div className="p-2 border rounded bg-gray-50">₹{offerPrice}</div>
           </div>
 
@@ -656,7 +684,9 @@ export default function OccForm({ closeModal, editingProduct = null, onSuccess }
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Product Category*</label>
+            <label className="block text-sm font-medium mb-1">
+              Product Category*
+            </label>
             <select
               name="productCategoryId"
               value={formData.productCategoryId}
@@ -678,30 +708,39 @@ export default function OccForm({ closeModal, editingProduct = null, onSuccess }
             <Dropdown
               options={tags.map((tag) => ({ label: tag.Tag, value: tag.Tag }))}
               value={formData.tag}
-              onChange={(value) => setFormData((prev) => ({ ...prev, tag: value }))}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, tag: value }))
+              }
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-1">Fabric</label>
             <Dropdown
-              options={fabrics.map((fabric) => ({ label: fabric.Fabric, value: fabric.Fabric }))}
+              options={fabrics.map((fabric) => ({
+                label: fabric.Fabric,
+                value: fabric.Fabric,
+              }))}
               value={formData.fabric}
-              onChange={(value) => setFormData((prev) => ({ ...prev, fabric: value }))}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, fabric: value }))
+              }
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-1">Color</label>
             <MultiSelect
-              options={colors.map((color) => ({ label: color.Color, value: color.Color }))}
+              options={colors.map((color) => ({
+                label: color.Color,
+                value: color.Color,
+              }))}
               value={formData.color ? formData.color.split(",") : []}
-              onChange={(values) => setFormData((prev) =>  
-              ({ ...prev, color: values.join(",") }))}
+              onChange={(values) =>
+                setFormData((prev) => ({ ...prev, color: values.join(",") }))
+              }
               name="color"
             />
-           
-
           </div>
 
           <div>
@@ -712,10 +751,15 @@ export default function OccForm({ closeModal, editingProduct = null, onSuccess }
               onChange={(values) => setFormData((prev) => ({ ...prev, size: values.join(",") }))}
               name="size"
             /> */}
-             <MultiSelect
-              options={sizes.map((size) => ({ label: size.Size, value: size.Size }))}
+            <MultiSelect
+              options={sizes.map((size) => ({
+                label: size.Size,
+                value: size.Size,
+              }))}
               value={formData.size ? formData.size.split(",") : []}
-              onChange={(values) => setFormData((prev) => ({ ...prev, size: values.join(",") }))}
+              onChange={(values) =>
+                setFormData((prev) => ({ ...prev, size: values.join(",") }))
+              }
               name="size"
             />
           </div>
@@ -761,7 +805,9 @@ export default function OccForm({ closeModal, editingProduct = null, onSuccess }
           </div>
 
           <div className="col-span-2">
-            <label className="block text-sm font-medium mb-1">Description</label>
+            <label className="block text-sm font-medium mb-1">
+              Description
+            </label>
             <div className="border rounded">
               <CKEditor
                 editor={ClassicEditor}
@@ -772,7 +818,9 @@ export default function OccForm({ closeModal, editingProduct = null, onSuccess }
           </div>
 
           <div className="col-span-2">
-            <label className="block text-sm font-medium mb-1">Additional Information</label>
+            <label className="block text-sm font-medium mb-1">
+              Additional Information
+            </label>
             <div className="border rounded">
               <CKEditor
                 editor={ClassicEditor}
@@ -797,7 +845,11 @@ export default function OccForm({ closeModal, editingProduct = null, onSuccess }
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             disabled={loading}
           >
-            {loading ? "Processing..." : editingProduct ? "Update Product" : "Add Product"}
+            {loading
+              ? "Processing..."
+              : editingProduct
+              ? "Update Product"
+              : "Add Product"}
           </button>
         </div>
       </form>

@@ -23,7 +23,7 @@ export default function DiscountBanner() {
 
   const fetchBanners = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/admin/banner");
+      const response = await axios.get("https://sbwears.com/api/admin/banner");
       setBanners(response.data);
     } catch (error) {
       console.error("Error fetching banners:", error);
@@ -73,7 +73,7 @@ export default function DiscountBanner() {
         // Update existing banner
         formDataToSend.append("bannerId", formData.bannerId);
         response = await axios.post(
-          `http://localhost:3000/api/admin/banner?bannerId=${formData.bannerId}`,
+          `https://sbwears.com/api/admin/banner?bannerId=${formData.bannerId}`,
           formDataToSend,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -82,7 +82,7 @@ export default function DiscountBanner() {
       } else {
         // Create new banner
         response = await axios.post(
-          "http://localhost:3000/api/admin/banner",
+          "https://sbwears.com/api/admin/banner",
           formDataToSend,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -107,7 +107,7 @@ export default function DiscountBanner() {
       couponCode: banner.couponCode,
       bannerId: banner._id,
     });
-    setPreview(`http://localhost:3000/Public/image/${banner.image}`);
+    setPreview(`https://sbwears.com/Public/image/${banner.image}`);
     setIsEditMode(true);
     openModal();
   };
@@ -116,7 +116,7 @@ export default function DiscountBanner() {
     if (!window.confirm("Are you sure you want to delete this banner?")) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/admin/banner/${bannerId}`);
+      await axios.delete(`https://sbwears.com/api/admin/banner/${bannerId}`);
       fetchBanners(); // Refresh the banner list
       alert("Banner deleted successfully!");
     } catch (error) {
@@ -217,7 +217,7 @@ export default function DiscountBanner() {
               <div className="w-1/4">
                 <img
                   className="h-20 w-auto object-contain"
-                  src={`http://localhost:3000/image/${banner.image}`}
+                  src={`https://sbwears.com/image/${banner.image}`}
                   alt="bannerImage"
                 />
               </div>

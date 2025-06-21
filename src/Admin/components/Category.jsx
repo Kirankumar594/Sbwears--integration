@@ -15,7 +15,7 @@ export default function Category() {
   const [description, setDescription] = useState("");
   const [formData, setFormData] = useState({
     category: "",
-    coupon: ""
+    coupon: "",
   });
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -25,7 +25,7 @@ export default function Category() {
     setCurrentCategoryId(null);
     setFormData({
       category: "",
-      coupon: ""
+      coupon: "",
     });
     setDescription("");
     setSelectedFile(null);
@@ -45,7 +45,7 @@ export default function Category() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -55,7 +55,9 @@ export default function Category() {
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:3000/api/admin/product/category");
+      const response = await axios.get(
+        "https://sbwears.com/api/admin/product/category"
+      );
       setCategories(response.data || []);
     } catch (err) {
       setError(err.response?.data?.error || "Failed to fetch categories");
@@ -76,7 +78,7 @@ export default function Category() {
   //     setIsEditing(true);
   //     setCurrentCategoryId(category._id);
   //     setModalOpen(true);
-      
+
   //     // Set initial values from the category passed in
   //     setFormData({
   //       category: category.Category || "",
@@ -86,12 +88,12 @@ export default function Category() {
   //     handleSubmit()
   //     // Fetch the complete category data for any additional fields
   //     const response = await axios.get(
-  //       // `http://localhost:3000/api/admin/product/category/single/${currentCategoryId}`
-  //       `http://localhost:3000/api/admin/product/category/single/68545410bfba00afea85fa22`
+  //       // `https://sbwears.com/api/admin/product/category/single/${currentCategoryId}`
+  //       `https://sbwears.com/api/admin/product/category/single/68545410bfba00afea85fa22`
   //     );
-      
+
   //     const categoryData = response.data
-      
+
   //     if (categoryData) {
   //       setFormData({
   //         category: categoryData.Category || category.Category || "",
@@ -104,29 +106,29 @@ export default function Category() {
   //     setError(error.response?.data?.error || "Failed to load category details");
   //   }
   // };
-const handleEdit = async (category) => {
-  setIsEditing(true);
-  setCurrentCategoryId(category._id);
-  setModalOpen(true);
-  setFormData({
-    category: category.Category || "",
-    coupon: ""
-  });
-  setDescription(category.Description || "");
-  setSelectedFile(null); // Don’t load image by default for edit
-  setError(null);
-};
+  const handleEdit = async (category) => {
+    setIsEditing(true);
+    setCurrentCategoryId(category._id);
+    setModalOpen(true);
+    setFormData({
+      category: category.Category || "",
+      coupon: "",
+    });
+    setDescription(category.Description || "");
+    setSelectedFile(null); // Don’t load image by default for edit
+    setError(null);
+  };
 
   // Handle form submission
   // const handleSubmit = async (e) => {
   //   e?.preventDefault();
-    
+
   //   try {
   //     setLoading(true);
   //     setError(null);
-      
+
   //     const formDataToSend = new FormData();
-      
+
   //     // Only append fields that are being updated
   //     if (selectedFile) {
   //       formDataToSend.append("image", selectedFile);
@@ -137,13 +139,13 @@ const handleEdit = async (category) => {
   //     if (description) {
   //       formDataToSend.append("Description", description);
   //     }
-      
+
   //     let response;
-      
+
   //     if (isEditing && currentCategoryId) {
   //       formDataToSend.append("CategoryId", currentCategoryId);
   //       response = await axios.post(
-  //         `http://localhost:3000/api/admin/product/category/${currentCategoryId}`,
+  //         `https://sbwears.com/api/admin/product/category/${currentCategoryId}`,
   //         formDataToSend,
   //         {
   //           headers: {
@@ -156,9 +158,9 @@ const handleEdit = async (category) => {
   //       if (!selectedFile || !formData.category || !description) {
   //         throw new Error("Image, Category and Description are required for new category");
   //       }
-        
+
   //       response = await axios.post(
-  //         "http://localhost:3000/api/admin/product/category",
+  //         "https://sbwears.com/api/admin/product/category",
   //         formDataToSend,
   //         {
   //           headers: {
@@ -176,58 +178,65 @@ const handleEdit = async (category) => {
   //   } catch (error) {
   //     console.error("Error submitting category:", error);
   //     setError(
-  //       error.response?.data?.error || 
-  //       error.message || 
+  //       error.response?.data?.error ||
+  //       error.message ||
   //       "Error processing category"
   //     );
   //   } finally {
   //     setLoading(false);
   //   }
   // };
-const handleSubmit = async (e) => {
-  e?.preventDefault();
+  const handleSubmit = async (e) => {
+    e?.preventDefault();
 
-  try {
-    setLoading(true);
-    setError(null);
-    
-    const formDataToSend = new FormData();
-    if (formData.category) formDataToSend.append("Category", formData.category);
-    if (description) formDataToSend.append("Description", description);
-    if (selectedFile) formDataToSend.append("image", selectedFile);
+    try {
+      setLoading(true);
+      setError(null);
 
-    let response;
-    if (isEditing && currentCategoryId) {
-      formDataToSend.append("CategoryId", currentCategoryId);
-      response = await axios.post(
-        `http://localhost:3000/api/admin/product/category/${currentCategoryId}`,
-        formDataToSend,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-    } else {
-      if (!selectedFile || !formData.category || !description) {
-        throw new Error("Image, Category and Description are required for new category");
+      const formDataToSend = new FormData();
+      if (formData.category)
+        formDataToSend.append("Category", formData.category);
+      if (description) formDataToSend.append("Description", description);
+      if (selectedFile) formDataToSend.append("image", selectedFile);
+
+      let response;
+      if (isEditing && currentCategoryId) {
+        formDataToSend.append("CategoryId", currentCategoryId);
+        response = await axios.post(
+          `https://sbwears.com/api/admin/product/category/${currentCategoryId}`,
+          formDataToSend,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+      } else {
+        if (!selectedFile || !formData.category || !description) {
+          throw new Error(
+            "Image, Category and Description are required for new category"
+          );
+        }
+
+        response = await axios.post(
+          "https://sbwears.com/api/admin/product/category",
+          formDataToSend,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
       }
 
-      response = await axios.post(
-        "http://localhost:3000/api/admin/product/category",
-        formDataToSend,
-        { headers: { "Content-Type": "multipart/form-data" } }
+      if (response.data?.message) {
+        alert(response.data.message);
+        fetchCategories();
+        closeModal();
+      }
+    } catch (error) {
+      console.error("Error submitting category:", error);
+      setError(
+        error.response?.data?.error ||
+          error.message ||
+          "Error processing category"
       );
+    } finally {
+      setLoading(false);
     }
-
-    if (response.data?.message) {
-      alert(response.data.message);
-      fetchCategories();
-      closeModal();
-    }
-  } catch (error) {
-    console.error("Error submitting category:", error);
-    setError(error.response?.data?.error || error.message || "Error processing category");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   // Handle delete
   const handleDelete = async (id) => {
@@ -235,7 +244,7 @@ const handleSubmit = async (e) => {
       try {
         setLoading(true);
         const response = await axios.delete(
-          `http://localhost:3000/api/admin/product/category/${id}`
+          `https://sbwears.com/api/admin/product/category/${id}`
         );
         if (response.data?.message) {
           alert(response.data.message);
@@ -360,7 +369,7 @@ const handleSubmit = async (e) => {
                   {category?.image && (
                     <img
                       className="h-28 w-28 object-cover"
-                      src={`http://localhost:3000/image/${category.image}`}
+                      src={`https://sbwears.com/image/${category.image}`}
                       alt="category"
                     />
                   )}
