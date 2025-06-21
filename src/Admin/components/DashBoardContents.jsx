@@ -124,7 +124,5 @@ const recentOrders = [
     from : "Order #329F from abhishek",
     time : "17/01/2025, 17:32:01",
     type : "Order",
-  }, 
- 
-   
+  },  
 ]
