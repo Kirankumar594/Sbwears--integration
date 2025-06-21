@@ -99,7 +99,7 @@ const Home = () => {
       >
         <div className="flex items-center justify-between py-2 lg:py-6 md:py-6">
           <div className="flex items-center gap-3 lg:gap-4 md:gap-4 text-tiny">
-            <div
+            {/* <div
               className="flex flex-row gap-1 cursor-pointer"
               onClick={toggleMenu}
             >
@@ -115,7 +115,7 @@ const Home = () => {
               >
                 MENU
               </div>
-            </div>
+            </div> */}
             <div
               className="flex flex-row gap-1 cursor-pointer"
               onClick={openSearch}
@@ -214,13 +214,13 @@ const Home = () => {
             )}
             {isLoginOpen && <Login />}
             <div className="flex justify-center gap-3 lg:gap-8 md:gap-8">
-              <a href="account">
+              {/* <a href="account">
                 <FaRegHeart
                   className={`w-5 h-5  ${
                     isScrolled ? "text-black" : "text-white"
                   }`}
                 />
-              </a>
+              </a> */}
               <FiShoppingCart
                 className={`w-5 h-5 cursor-pointer ${
                   isScrolled ? "text-black" : "text-white"

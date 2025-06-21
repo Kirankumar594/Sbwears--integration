@@ -21,7 +21,7 @@ export default function ProductPage() {
 
   const getProductById = async () => {
     const res = await axios(
-      `http://localhost:8080/api/admin/category/product/${id}`
+      `https://sbwears.com/api/admin/category/product/${id}`
     );
     console.log(res);
     setProduct(res.data.product);
@@ -48,7 +48,7 @@ export default function ProductPage() {
     };
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/admin/cart/add",
+        "https://sbwears.com/api/admin/cart/add",
         cart
       );
       if (res.status === 200) alert("Product added to cart successfully");
@@ -66,7 +66,7 @@ export default function ProductPage() {
               <img
                 key={index}
                 className="object-cover w-full h-auto rounded-lg"
-                src={`http://localhost:8080/image/${img}`}
+                src={`https://sbwears.com/image/${img}`}
                 alt={`product-${index + 1}`}
                 loading="lazy"
               />
@@ -197,9 +197,9 @@ export default function ProductPage() {
       </div>
 
       <div className="container px-4 mx-auto">
-        <CustomerReviews />
+        {/* <CustomerReviews />
         <AlsoLike />
-        <RecentlyViewed />
+        <RecentlyViewed /> */}
       </div>
     </>
   );

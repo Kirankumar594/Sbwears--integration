@@ -13,7 +13,7 @@ export default function ShopByCategories() {
   const getCategory = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/admin/product/category"
+        "https://sbwears.com/api/admin/product/category"
       );
       console.log(res, "qqqqqqqqqqqqqqq");
       setCategory(res.data);
@@ -37,7 +37,7 @@ export default function ShopByCategories() {
           <img
             className="mr-3 h-52 w-52"
             onClick={handleClick}
-            src={`http://localhost:8080/image/${collection.image}`}
+            src={`https://sbwears.com/image/${collection.image}`}
             alt={"name"}
           />
         ))}

@@ -139,7 +139,7 @@ export default function AbandonedCart() {
       try {
         setLoading(true);
         const response = await axios.get(
-          "http://localhost:3000/api/admin/cart/abandoned"
+          "https://sbwears.com/api/admin/cart/abandoned"
         );
         setAbandonedCarts(response.data.usersWithAbandonedCarts || []);
       } catch (err) {
@@ -170,7 +170,7 @@ export default function AbandonedCart() {
     try {
       // Implement your delete cart logic here
       // Example: await axios.delete(`/api/cart/${userId}`);
-      setAbandonedCarts(abandonedCarts.filter(user => user._id !== userId));
+      setAbandonedCarts(abandonedCarts.filter((user) => user._id !== userId));
       toast.success("Cart cleared successfully!");
     } catch (err) {
       console.error("Error deleting cart:", err);
@@ -178,14 +178,14 @@ export default function AbandonedCart() {
     }
   };
 
-  const filteredCarts = abandonedCarts.filter(user => {
+  const filteredCarts = abandonedCarts.filter((user) => {
     const searchLower = searchTerm.toLowerCase();
     return (
       user.phoneNumber?.toLowerCase().includes(searchLower) ||
       user._id?.toLowerCase().includes(searchLower)
     );
   });
-  console.log("filteredCarts. : " , filteredCarts)
+  console.log("filteredCarts. : ", filteredCarts);
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -232,10 +232,18 @@ export default function AbandonedCart() {
             <thead className="bg-black text-white">
               <tr>
                 <th className="border-b border-gray-300 px-4 py-5">User ID</th>
-                <th className="border-b border-gray-300 px-4 py-5">User Name</th>
-                <th className="border-b border-gray-300 px-4 py-2">Phone Number</th>
-                <th className="border-b border-gray-300 px-4 py-2">Cart Items</th>
-                <th className="border-b border-gray-300 px-4 py-2">Oldest Item</th>
+                <th className="border-b border-gray-300 px-4 py-5">
+                  User Name
+                </th>
+                <th className="border-b border-gray-300 px-4 py-2">
+                  Phone Number
+                </th>
+                <th className="border-b border-gray-300 px-4 py-2">
+                  Cart Items
+                </th>
+                <th className="border-b border-gray-300 px-4 py-2">
+                  Oldest Item
+                </th>
                 <th className="border-b border-gray-300 px-4 py-2">Action</th>
               </tr>
             </thead>
@@ -243,13 +251,19 @@ export default function AbandonedCart() {
               {filteredCarts.map((user) => {
                 const oldestItem = user.oldCartItems.reduce((oldest, item) => {
                   const itemDate = new Date(item.addedAt);
-                  return !oldest || itemDate < new Date(oldest.addedAt) ? item : oldest;
+                  return !oldest || itemDate < new Date(oldest.addedAt)
+                    ? item
+                    : oldest;
                 }, null);
 
                 return (
                   <tr key={user._id} className="text-center hover:bg-gray-50">
-                    <td className="border-b border-gray-300 px-4 py-5">{user._id}</td>
-                    <td className="border-b border-gray-300 px-4 py-5">{user.firstName}</td>
+                    <td className="border-b border-gray-300 px-4 py-5">
+                      {user._id}
+                    </td>
+                    <td className="border-b border-gray-300 px-4 py-5">
+                      {user.firstName}
+                    </td>
                     <td className="border-b border-gray-300 px-4 py-2">
                       {user.phoneNumber || "N/A"}
                     </td>
@@ -317,9 +331,11 @@ const ReminderModal = ({ isOpen, onClose, user, onRemind }) => {
             ✕
           </button>
         </div>
-        
+
         <div className="mb-2">
-          <p className="text-sm text-gray-600">User: {user?.phoneNumber || user?._id}</p>
+          <p className="text-sm text-gray-600">
+            User: {user?.phoneNumber || user?._id}
+          </p>
           <p className="text-sm text-gray-600">
             Abandoned Items: {user?.oldCartItems?.length || 0}
           </p>
@@ -327,7 +343,9 @@ const ReminderModal = ({ isOpen, onClose, user, onRemind }) => {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Coupon Code</label>
+            <label className="block text-sm font-medium mb-1">
+              Coupon Code
+            </label>
             <input
               type="text"
               placeholder="Enter coupon code"
@@ -336,7 +354,7 @@ const ReminderModal = ({ isOpen, onClose, user, onRemind }) => {
               onChange={(e) => setCoupon(e.target.value)}
             />
           </div>
-          
+
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Message</label>
             <textarea
@@ -347,7 +365,7 @@ const ReminderModal = ({ isOpen, onClose, user, onRemind }) => {
               onChange={(e) => setMessage(e.target.value)}
             />
           </div>
-          
+
           <div className="flex justify-end gap-2">
             <button
               type="button"

@@ -11,9 +11,7 @@ const Hero = () => {
 
   const getBanner = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/api/admin/banner"
-      );
+      const response = await axios.get("https://sbwears.com/api/admin/banner");
       setBanner(response.data);
     } catch (error) {
       console.log(error);
@@ -30,7 +28,7 @@ const Hero = () => {
     <div className="relative w-full ">
       <img
         // src="https://www.libas.in/cdn/shop/files/desktop-eoss_b47b3d2e-63c3-4a33-9858-340255cc1dfb.jpg?v=1735982857&width=2400"
-        src={`http://localhost:8080/image/${banner[0]?.image}`}
+        src={`https://sbwears.com/image/${banner[0]?.image}`}
         alt="Sale Background"
         className="object-cover hover:cursor-pointer"
         onClick={handleClick}

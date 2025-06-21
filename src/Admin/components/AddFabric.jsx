@@ -19,7 +19,9 @@ export default function AddFabric() {
   const fetchFabrics = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:3000/api/admin/productManagement/fabric");
+      const response = await axios.get(
+        "https://sbwears.com/api/admin/productManagement/fabric"
+      );
       setFabrics(response.data);
       setLoading(false);
     } catch (error) {
@@ -38,16 +40,22 @@ export default function AddFabric() {
     try {
       if (editMode && currentFabricId) {
         // Update existing fabric
-        await axios.post(`http://localhost:3000/api/admin/productManagement/fabric`, {
-          Fabric: fabricName,
-          fabricId: currentFabricId
-        });
+        await axios.post(
+          `https://sbwears.com/api/admin/productManagement/fabric`,
+          {
+            Fabric: fabricName,
+            fabricId: currentFabricId,
+          }
+        );
         alert("Fabric updated successfully");
       } else {
         // Add new fabric
-        await axios.post("http://localhost:3000/api/admin/productManagement/fabric", {
-          Fabric: fabricName
-        });
+        await axios.post(
+          "https://sbwears.com/api/admin/productManagement/fabric",
+          {
+            Fabric: fabricName,
+          }
+        );
         alert("Fabric added successfully");
       }
 
@@ -70,7 +78,9 @@ export default function AddFabric() {
     if (!window.confirm("Are you sure you want to delete this fabric?")) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/admin/productManagement/fabric/${fabricId}`);
+      await axios.delete(
+        `https://sbwears.com/api/admin/productManagement/fabric/${fabricId}`
+      );
       alert("Fabric deleted successfully");
       fetchFabrics(); // Refresh the list
     } catch (error) {

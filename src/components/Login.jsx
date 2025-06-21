@@ -54,7 +54,7 @@
 
 //   setIsLoading(true);
 //   try {
-//     const response = await axios.post("http://localhost:3000/api/users/auth/request-otp", {
+//     const response = await axios.post("https://sbwears.com/api/users/auth/request-otp", {
 //       phoneNumber: mobileNumber,
 //     });
 
@@ -73,7 +73,6 @@
 //   }
 // };
 
-
 //   const handleVerifyOtp = async () => {
 //     const enteredOtp = otp.join("");
 //     if (enteredOtp.length !== 4) {
@@ -84,7 +83,7 @@
 //     setIsLoading(true);
 //     try {
 //       const response = await axios.post(
-//         "http://localhost:3000/api/users/auth/verify-otp",
+//         "https://sbwears.com/api/users/auth/verify-otp",
 //         {
 //           phoneNumber: mobileNumber,
 //           otp: enteredOtp,
@@ -364,7 +363,7 @@
 
 // //     setIsLoading(true);
 // //     try {
-// //       const response = await axios.post("http://localhost:3000/api/users/auth/request-otp", {
+// //       const response = await axios.post("https://sbwears.com/api/users/auth/request-otp", {
 // //         phoneNumber: mobileNumber,
 // //       });
 
@@ -394,7 +393,7 @@
 
 // //     setIsLoading(true);
 // //     try {
-// //       const response = await axios.post("http://localhost:3000/api/users/auth/verify-otp", {
+// //       const response = await axios.post("https://sbwears.com/api/users/auth/verify-otp", {
 // //         phoneNumber: mobileNumber,
 // //         otp: enteredOtp,
 // //       });
@@ -592,7 +591,7 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
-import { toast , ToastContainer} from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -642,10 +641,13 @@ function Login() {
     setIsLoading(true);
     try {
       // Simulate API call - replace with your actual API endpoint
-      const response = await axios.post("http://localhost:3000/api/users/auth/request-otp", {
-        phoneNumber: mobileNumber,
-      });
-      console.log("response : " , response.data.otp)
+      const response = await axios.post(
+        "https://sbwears.com/api/users/auth/request-otp",
+        {
+          phoneNumber: mobileNumber,
+        }
+      );
+      console.log("response : ", response.data.otp);
       toast.success(`Your OTP ${response.data.otp}`);
       setShowOtpSection(true);
       setCountdown(10);
@@ -655,7 +657,7 @@ function Login() {
       setIsLoading(false);
     }
   };
-  console.log("otp : " , otp)
+  console.log("otp : ", otp);
   const handleVerifyOtp = async () => {
     const enteredOtp = otp.join("");
     if (enteredOtp.length !== 4) {
@@ -667,19 +669,19 @@ function Login() {
     try {
       // Simulate API call - replace with your actual API endpoint
       const response = await axios.post(
-        "http://localhost:3000/api/users/auth/verify-otp",
+        "https://sbwears.com/api/users/auth/verify-otp",
         {
           phoneNumber: mobileNumber,
           otp: enteredOtp,
         }
       );
-      console.log("reponse : " , response)
+      console.log("reponse : ", response);
       localStorage.setItem("userToken", response.data.token);
       localStorage.setItem("userId", response.data.user._id);
       localStorage.setItem("userPhone", mobileNumber);
-      
+
       // axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
-      
+
       toast.success("Login successful!");
       navigate("/productsList");
       // window.location.href("/")
@@ -701,12 +703,14 @@ function Login() {
 
   const modalContent = isOpen && (
     <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-4 z-50">
-      <ToastContainer/>
+      <ToastContainer />
       <div className="bg-white rounded-xl w-full max-w-md overflow-hidden shadow-2xl">
         <div className="p-8">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome</h2>
-            <p className="text-gray-600">Enter your mobile number to continue</p>
+            <p className="text-gray-600">
+              Enter your mobile number to continue
+            </p>
           </div>
 
           <div className="space-y-6">
@@ -727,7 +731,9 @@ function Login() {
                 onClick={handleRequestOtp}
                 disabled={isLoading || mobileNumber.length !== 10}
                 className={`w-full py-3 px-4 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors ${
-                  (isLoading || mobileNumber.length !== 10) ? "opacity-70 cursor-not-allowed" : ""
+                  isLoading || mobileNumber.length !== 10
+                    ? "opacity-70 cursor-not-allowed"
+                    : ""
                 }`}
               >
                 {isLoading ? "Sending OTP..." : "Get OTP"}
@@ -739,7 +745,7 @@ function Login() {
                 <p className="text-gray-600 mb-4 text-center">
                   OTP sent to +91 {mobileNumber}
                 </p>
-                
+
                 <div className="flex justify-between space-x-3 mb-6">
                   {otp.map((digit, index) => (
                     <input

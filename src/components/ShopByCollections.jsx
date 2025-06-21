@@ -12,7 +12,7 @@ export default function ShopByCollections() {
   const getCollection = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/admin/occasion/title"
+        "https://sbwears.com/api/admin/occasion/title"
       );
       setCollection(response.data);
     } catch (error) {
@@ -35,7 +35,7 @@ export default function ShopByCollections() {
             collection[1]?.categories?.map((collection)=>(
               <div className="mb-6 ">
               <img
-                src={`http://localhost:8080/image/${collection.image}`}
+                src={`https://sbwears.com/image/${collection.image}`}
                 alt={"name"}
                 onClick={handleClick}
                 className="cursor-pointer h-70% w-70% object-cover object-center group-hover:scale-105 transition-transform duration-300"
@@ -66,7 +66,7 @@ export default function ShopByCollections() {
               {col.categories?.map((category, catIndex) => (
                 <div className="mb-6" key={catIndex}>
                   <img
-                    src={`http://localhost:8080/image/${category.image}`}
+                    src={`https://sbwears.com/image/${category.image}`}
                     alt="category"
                     onClick={handleClick}
                     className="cursor-pointer h-70% w-70% object-cover object-center group-hover:scale-105 transition-transform duration-300"

@@ -4,7 +4,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 const Cart = () => {
   // const getCart = async () => {
   //   const [user, setUser] = useState([]);
-  //   const res = await axios.get("http://localhost:8080/api/users/user/679df27605ddb49197de32fb");
+  //   const res = await axios.get("https://sbwears.com/api/users/user/679df27605ddb49197de32fb");
   //   setUser(res.data);
   // };
 

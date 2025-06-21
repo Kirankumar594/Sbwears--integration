@@ -181,7 +181,9 @@ export default function OccProduct() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:3000/api/admin/category/product");
+      const response = await axios.get(
+        "https://sbwears.com/api/admin/category/product"
+      );
       setProducts(response.data.products || []);
     } catch (err) {
       setError(err.response?.data?.error || "Failed to fetch products");
@@ -213,9 +215,12 @@ export default function OccProduct() {
     try {
       setLoading(true);
       const newStatus = !currentStatus;
-      await axios.put(`http://localhost:3000/api/admin/category/product/${productId}/status`, {
-        status: newStatus
-      });
+      await axios.put(
+        `https://sbwears.com/api/admin/category/product/${productId}/status`,
+        {
+          status: newStatus,
+        }
+      );
       fetchProducts(); // Refresh the product list
     } catch (err) {
       setError(err.response?.data?.error || "Failed to update product status");
@@ -229,7 +234,9 @@ export default function OccProduct() {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         setLoading(true);
-        await axios.delete(`http://localhost:3000/api/admin/category/product/${productId}`);
+        await axios.delete(
+          `https://sbwears.com/api/admin/category/product/${productId}`
+        );
         fetchProducts(); // Refresh the product list
       } catch (err) {
         setError(err.response?.data?.error || "Failed to delete product");
@@ -241,9 +248,10 @@ export default function OccProduct() {
   };
 
   // Filter products based on search term
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.category.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -298,9 +306,9 @@ export default function OccProduct() {
           </div> */}
         </div>
         <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <OccForm  
-            closeModal={closeModal} 
-            editingProduct={selectedProduct} 
+          <OccForm
+            closeModal={closeModal}
+            editingProduct={selectedProduct}
             onSuccess={fetchProducts}
           />
         </Modal>
@@ -317,7 +325,9 @@ export default function OccProduct() {
       </div>
 
       <div className="bg-white rounded-xl my-5 mx-5 p-8 shadow-lg w-80%">
-        <p className="text-xl font-bold p-3 pt-0">Products {filteredProducts.length}</p>
+        <p className="text-xl font-bold p-3 pt-0">
+          Products {filteredProducts.length}
+        </p>
         {loading ? (
           <div className="text-center py-10">Loading products...</div>
         ) : filteredProducts.length === 0 ? (
@@ -334,7 +344,10 @@ export default function OccProduct() {
               <p className="font-black text-white">Action</p>
             </div>
             {filteredProducts.map((product, index) => (
-              <div className="flex flex-row justify-between border-b p-2" key={product._id}>
+              <div
+                className="flex flex-row justify-between border-b p-2"
+                key={product._id}
+              >
                 <div className="flex flex-col gap-2 items-center justify-center">
                   <p>{product._id.substring(0, 6)}</p> {/* Shortened ID */}
                 </div>
@@ -349,7 +362,9 @@ export default function OccProduct() {
                 </div>
                 <div className="flex flex-col gap-2 items-center justify-center">
                   <Switch
-                    onChange={() => handleSwitchChange(product._id, product.status)}
+                    onChange={() =>
+                      handleSwitchChange(product._id, product.status)
+                    }
                     checked={product.status}
                     className="react-switch"
                   />
@@ -361,10 +376,12 @@ export default function OccProduct() {
                   <button onClick={() => openProductDetail(product)}>
                     <LuEye className="h-5 w-5" />
                   </button>
-                  <button onClick={() => {
-                    setSelectedProduct(product);
-                    setModalOpen(true);
-                  }}>
+                  <button
+                    onClick={() => {
+                      setSelectedProduct(product);
+                      setModalOpen(true);
+                    }}
+                  >
                     <MdOutlineEdit className="h-5 w-5" />
                   </button>
                   <button onClick={() => handleDelete(product._id)}>

@@ -55,7 +55,7 @@ function Filter() {
   const getSize = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/admin/productManagement/size"
+        "https://sbwears.com/api/admin/productManagement/size"
       );
       setSize(res.data);
     } catch (error) {
@@ -71,7 +71,7 @@ function Filter() {
   const getColor = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/admin/productManagement/color"
+        "https://sbwears.com/api/admin/productManagement/color"
       );
       console.log("res...........", res);
       setColor(res.data);
@@ -88,7 +88,7 @@ function Filter() {
   const getCategory = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/admin/product/category"
+        "https://sbwears.com/api/admin/product/category"
       );
       console.log("rescccccccccccc...........", res);
       setCategory(res.data);
@@ -106,7 +106,7 @@ function Filter() {
   const getOccasion = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/admin/occasion/title"
+        "https://sbwears.com/api/admin/occasion/title"
       );
       console.log(res);
       setOccasion(res.data);
@@ -123,7 +123,7 @@ function Filter() {
   const getFabric = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/admin/productManagement/fabric"
+        "https://sbwears.com/api/admin/productManagement/fabric"
       );
       console.log("rescccccccccccc...........", res);
       setFabric(res.data);
@@ -340,10 +340,10 @@ export default Filter;
 //     const fetchFilterOptions = async () => {
 //       try {
 //         const [sizes, colors, categories, fabrics] = await Promise.all([
-//           axios.get("http://localhost:8080/api/admin/productManagement/size"),
-//           axios.get("http://localhost:8080/api/admin/productManagement/color"),
-//           axios.get("http://localhost:8080/api/admin/product/category"),
-//           axios.get("http://localhost:8080/api/admin/productManagement/fabric"),
+//           axios.get("https://sbwears.com/api/admin/productManagement/size"),
+//           axios.get("https://sbwears.com/api/admin/productManagement/color"),
+//           axios.get("https://sbwears.com/api/admin/product/category"),
+//           axios.get("https://sbwears.com/api/admin/productManagement/fabric"),
 //         ]);
 
 //         setSizeOptions(sizes.data);

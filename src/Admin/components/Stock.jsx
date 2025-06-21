@@ -102,7 +102,9 @@ export default function Stock() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:3000/api/admin/products/stock");
+      const response = await axios.get(
+        "https://sbwears.com/api/admin/products/stock"
+      );
       setProducts(response.data.products);
     } catch (err) {
       setError(err.response?.data?.error || "Failed to fetch products");
@@ -118,10 +120,12 @@ export default function Stock() {
   const handleProductSelect = async (product) => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:3000/api/admin/products/${product._id}/stock`);
+      const response = await axios.get(
+        `https://sbwears.com/api/admin/products/${product._id}/stock`
+      );
       setSelectedProduct({
         ...product,
-        stockData: response.data
+        stockData: response.data,
       });
       setOpenStock(true);
     } catch (err) {
@@ -131,19 +135,23 @@ export default function Stock() {
     }
   };
 
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.category.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  console.log("filteredProducts : " , filteredProducts)
-  
+  console.log("filteredProducts : ", filteredProducts);
+
   return (
     <div className="flex flex-col w-full overflow-x-auto">
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mx-5 mt-5">
           {error}
-          <button onClick={() => setError(null)} className="absolute top-0 right-0 px-2 py-1">
+          <button
+            onClick={() => setError(null)}
+            className="absolute top-0 right-0 px-2 py-1"
+          >
             &times;
           </button>
         </div>
@@ -170,26 +178,53 @@ export default function Stock() {
           <table className="table-auto w-full rounded-xl border-gray-200">
             <thead>
               <tr className="bg-black text-white">
-                <th className="font-black border-b px-4 py-5 border-gray-300">ID</th>
-                <th className="p-4 font-black border-b border-gray-300">Product Name</th>
-                <th className="p-4 font-black border-b border-gray-300">Category</th>
-                <th className="p-4 font-black border-b border-gray-300">Available Sizes</th>
-                <th className="p-4 font-black border-b border-gray-300">Total Stock</th>
-                <th className="p-4 font-black border-b border-gray-300">Actions</th>
+                <th className="font-black border-b px-4 py-5 border-gray-300">
+                  ID
+                </th>
+                <th className="p-4 font-black border-b border-gray-300">
+                  Product Name
+                </th>
+                <th className="p-4 font-black border-b border-gray-300">
+                  Category
+                </th>
+                <th className="p-4 font-black border-b border-gray-300">
+                  Available Sizes
+                </th>
+                <th className="p-4 font-black border-b border-gray-300">
+                  Total Stock
+                </th>
+                <th className="p-4 font-black border-b border-gray-300">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
               {filteredProducts.map((product) => {
-                const totalStock = product.stockBySize?.reduce((sum, size) => sum + size.quantity, 0) || 0;
+                const totalStock =
+                  product.stockBySize?.reduce(
+                    (sum, size) => sum + size.quantity,
+                    0
+                  ) || 0;
                 return (
-                  <tr key={product._id} className="text-center border-b hover:bg-gray-50">
-                    <td className="px-4 py-5 border-b border-gray-300">{product._id.substring(18, 24)}</td>
-                    <td className="p-2 border-b border-gray-300">{product.name}</td>
-                    <td className="p-2 border-b border-gray-300">{product.category}</td>
+                  <tr
+                    key={product._id}
+                    className="text-center border-b hover:bg-gray-50"
+                  >
+                    <td className="px-4 py-5 border-b border-gray-300">
+                      {product._id.substring(18, 24)}
+                    </td>
+                    <td className="p-2 border-b border-gray-300">
+                      {product.name}
+                    </td>
+                    <td className="p-2 border-b border-gray-300">
+                      {product.category}
+                    </td>
                     <td className="p-2 border-b border-gray-300">
                       {product.availableSizes?.join(", ") || "N/A"}
                     </td>
-                    <td className="p-2 border-b border-gray-300">{totalStock}</td>
+                    <td className="p-2 border-b border-gray-300">
+                      {totalStock}
+                    </td>
                     <td className="p-2 border-b border-gray-300">
                       <button
                         onClick={() => handleProductSelect(product)}
@@ -207,8 +242,8 @@ export default function Stock() {
       </div>
 
       {openStock && selectedProduct && (
-        <UpdateStockModal 
-          isOpen={openStock} 
+        <UpdateStockModal
+          isOpen={openStock}
           onClose={() => setOpenStock(false)}
           product={selectedProduct}
           onStockUpdated={fetchProducts}

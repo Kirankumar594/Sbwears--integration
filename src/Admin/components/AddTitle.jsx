@@ -23,11 +23,14 @@ export default function AddTitle() {
   const fetchTitles = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:3000/api/admin/occasion/title", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "https://sbwears.com/api/admin/occasion/title",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setTitles(response.data);
     } catch (err) {
       setError(err.response?.data?.error || "Failed to fetch titles");
@@ -73,7 +76,7 @@ export default function AddTitle() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/admin//occasion/title",
+        "https://sbwears.com/api/admin//occasion/title",
         payload,
         {
           headers: {
@@ -83,7 +86,9 @@ export default function AddTitle() {
       );
       // Update titles state
       if (titleId) {
-        setTitles(titles.map((t) => (t._id === titleId ? response.data.title : t)));
+        setTitles(
+          titles.map((t) => (t._id === titleId ? response.data.title : t))
+        );
       } else {
         setTitles([...titles, response.data.title]);
       }
@@ -100,11 +105,14 @@ export default function AddTitle() {
 
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:3000/api/admin//occasion/title/${titleId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.delete(
+        `https://sbwears.com/api/admin//occasion/title/${titleId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setTitles(titles.filter((t) => t._id !== titleId));
     } catch (err) {
       setError(err.response?.data?.error || "Failed to delete title");
@@ -172,7 +180,9 @@ export default function AddTitle() {
         </Modal>
       </div>
       <div className="bg-white rounded-xl my-5 mx-5 p-8 shadow-lg w-[80%]">
-        <p className="text-xl font-bold p-3 pt-0">Previous Added Titles and SubTitles</p>
+        <p className="text-xl font-bold p-3 pt-0">
+          Previous Added Titles and SubTitles
+        </p>
         {error && <p className="text-red-500 mb-2">{error}</p>}
         {loading && <p>Loading...</p>}
         <div className="flex flex-col gap-5 justify-between">

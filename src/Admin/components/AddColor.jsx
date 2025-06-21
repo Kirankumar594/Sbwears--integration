@@ -19,7 +19,9 @@ export default function AddColor() {
   const fetchColors = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:3000/api/admin/productManagement/color");
+      const response = await axios.get(
+        "https://sbwears.com/api/admin/productManagement/color"
+      );
       setColors(response.data);
       setLoading(false);
     } catch (error) {
@@ -38,16 +40,22 @@ export default function AddColor() {
     try {
       if (editMode && currentColorId) {
         // Update existing color
-        await axios.post(`http://localhost:3000/api/admin/productManagement/color`, {
-          Color: colorName,
-          colorId: currentColorId
-        });
+        await axios.post(
+          `https://sbwears.com/api/admin/productManagement/color`,
+          {
+            Color: colorName,
+            colorId: currentColorId,
+          }
+        );
         alert("Color updated successfully");
       } else {
         // Add new color
-        await axios.post("http://localhost:3000/api/admin/productManagement/color", {
-          Color: colorName
-        });
+        await axios.post(
+          "https://sbwears.com/api/admin/productManagement/color",
+          {
+            Color: colorName,
+          }
+        );
         alert("Color added successfully");
       }
 
@@ -70,7 +78,9 @@ export default function AddColor() {
     if (!window.confirm("Are you sure you want to delete this color?")) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/admin/productManagement/color/${colorId}`);
+      await axios.delete(
+        `https://sbwears.com/api/admin/productManagement/color/${colorId}`
+      );
       alert("Color deleted successfully");
       fetchColors(); // Refresh the list
     } catch (error) {

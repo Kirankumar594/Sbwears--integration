@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -33,8 +33,13 @@ const SignUp = () => {
       confirmPassword: formData.confirmPassword.trim(),
     };
 
-    if (!trimmedData.name || !trimmedData.email || !trimmedData.password || !trimmedData.confirmPassword) {
-      setError('All fields are required and cannot contain only spaces.');
+    if (
+      !trimmedData.name ||
+      !trimmedData.email ||
+      !trimmedData.password ||
+      !trimmedData.confirmPassword
+    ) {
+      setError("All fields are required and cannot contain only spaces.");
       return;
     }
 
@@ -48,7 +53,7 @@ const SignUp = () => {
       return;
     }
 
-    if (!trimmedData.email.includes('@')) {
+    if (!trimmedData.email.includes("@")) {
       setError("Please enter a valid email address.");
       return;
     }
@@ -58,23 +63,26 @@ const SignUp = () => {
     try {
       const { name, email, password } = trimmedData;
 
-      const response = await axios.post('http://localhost:3001/signup', { name, email, password });
+      const response = await axios.post("https://sbwears.com/signup", {
+        name,
+        email,
+        password,
+      });
 
-      console.log('Success:', response.data);
-      setError('');
+      console.log("Success:", response.data);
+      setError("");
       setSuccess("Sign up successful!");
 
-      navigate('/signin');
+      navigate("/signin");
 
       setFormData({
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
       });
     } catch (error) {
-
-      console.error('Error:', error.response.data.message);
+      console.error("Error:", error.response.data.message);
       setError(error.response.data.message);
     } finally {
       setLoading(false);
@@ -85,14 +93,24 @@ const SignUp = () => {
     <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center relative"
       style={{
-        backgroundImage: `url('https://images.unsplash.com/photo-1714917712724-2b11167b7c96?q=80&w=2873&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`
+        backgroundImage: `url('https://images.unsplash.com/photo-1714917712724-2b11167b7c96?q=80&w=2873&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
       }}
     >
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       <div className="relative bg-white bg-opacity-90 p-8 rounded-3xl shadow-2xl max-w-lg w-full">
-        <h2 className="text-3xl font-extrabold text-center text-gray-800">Create Your Account</h2>
-        {error && <div className="mt-4 p-3 text-sm text-red-600 bg-red-100 rounded">{error}</div>}
-        {success && <div className="mt-4 p-3 text-sm text-green-600 bg-green-100 rounded">{success}</div>}
+        <h2 className="text-3xl font-extrabold text-center text-gray-800">
+          Create Your Account
+        </h2>
+        {error && (
+          <div className="mt-4 p-3 text-sm text-red-600 bg-red-100 rounded">
+            {error}
+          </div>
+        )}
+        {success && (
+          <div className="mt-4 p-3 text-sm text-green-600 bg-green-100 rounded">
+            {success}
+          </div>
+        )}
 
         {loading ? (
           <div className="flex justify-center items-center mt-6">
@@ -137,7 +155,9 @@ const SignUp = () => {
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-600">Confirm Password</label>
+              <label className="block text-sm text-gray-600">
+                Confirm Password
+              </label>
               <input
                 type="password"
                 name="confirmPassword"
@@ -150,13 +170,14 @@ const SignUp = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-transform transform hover:scale-105 duration-300">
+              className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-transform transform hover:scale-105 duration-300"
+            >
               Sign Up
             </button>
           </form>
         )}
         <p className="mt-6 text-sm text-center text-gray-600">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link to="/signin" className="text-blue-500 hover:underline">
             Sign in
           </Link>

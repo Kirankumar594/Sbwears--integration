@@ -14,7 +14,7 @@ export default function ShopByOccasions() {
   const getCategory = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/admin/product/category"
+        "https://sbwears.com/api/admin/product/category"
       );
       setCategory(res.data);
     } catch (error) {
@@ -30,7 +30,7 @@ export default function ShopByOccasions() {
   const getOccasion = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/admin/occasion/title"
+        "https://sbwears.com/api/admin/occasion/title"
       );
       console.log(res);
       setOccasion(res.data);
@@ -54,7 +54,7 @@ export default function ShopByOccasions() {
           {category.map((occasion) => (
             <div key={occasion.id} className="mb-6">
               <img
-                src={`http://localhost:8080/image/${occasion.image}`}
+                src={`https://sbwears.com/image/${occasion.image}`}
                 alt={occasion.description}
                 className="cursor-pointer h-[60%] w-[100%] object-fill  group-hover:scale-105 transition-transform duration-300"
                 onClick={handleClick}

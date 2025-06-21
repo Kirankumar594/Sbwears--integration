@@ -17,7 +17,7 @@
 //   const getProduct = async () => {
 //     try {
 //       const res = await axios.get(
-//         "http://localhost:8080/api/admin/category/product"
+//         "https://sbwears.com/api/admin/category/product"
 //       );
 //       console.log(res, "product");
 //       setProduct(res.data.products);
@@ -88,7 +88,7 @@
 //               >
 //                 <img
 //                   className="h-80% w-60% object-cover object-center"
-//                   src={`http://localhost:8080/image/${product.images[0]}`}
+//                   src={`https://sbwears.com/image/${product.images[0]}`}
 //                   alt="img"
 //                 />
 
@@ -174,15 +174,11 @@ const Filter = ({ productsData, onFilter }) => {
       try {
         const [sizes, colors, categories, fabrics, occasions] =
           await Promise.all([
-            axios.get("http://localhost:8080/api/admin/productManagement/size"),
-            axios.get(
-              "http://localhost:8080/api/admin/productManagement/color"
-            ),
-            axios.get("http://localhost:8080/api/admin/product/category"),
-            axios.get(
-              "http://localhost:8080/api/admin/productManagement/fabric"
-            ),
-            axios.get("http://localhost:8080/api/admin/occasion/title"),
+            axios.get("https://sbwears.com/api/admin/productManagement/size"),
+            axios.get("https://sbwears.com/api/admin/productManagement/color"),
+            axios.get("https://sbwears.com/api/admin/product/category"),
+            axios.get("https://sbwears.com/api/admin/productManagement/fabric"),
+            axios.get("https://sbwears.com/api/admin/occasion/title"),
           ]);
 
         setSizeOptions(sizes.data || []);
@@ -406,7 +402,7 @@ export default function ProductsListing() {
   const getProducts = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/admin/category/product"
+        "https://sbwears.com/api/admin/category/product"
       );
       setProducts(res.data.products || []);
       setFilteredProducts(res.data.products || []);
@@ -481,7 +477,7 @@ export default function ProductsListing() {
             >
               <img
                 className="h-80% w-60% object-cover object-center"
-                src={`http://localhost:8080/image/${product.images[0]}`}
+                src={`https://sbwears.com/image/${product.images[0]}`}
                 alt={product.name}
               />
               <p
