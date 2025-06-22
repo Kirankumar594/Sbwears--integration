@@ -2,8 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
-const userId = "679df27605ddb49197de32fb";
-
+// const userId = "679df27605ddb49197de32fb";
+const userId = localStorage.getItem("userId") 
 const Cart = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -70,7 +70,7 @@ const Cart = () => {
   if (loading) return <div>Loading...</div>;
 
   const cartItems = user?.cart || [];
-
+  console.log("cartItems : " , cartItems)
   const subtotal = cartItems.reduce((total, item) => {
     return total + (item.productId?.offerPrice || 0) * item.quantity;
   }, 0);
@@ -85,7 +85,7 @@ const Cart = () => {
           >
             <img
               className="w-20 h-24 object-cover"
-              src={item.productId?.images?.[0] || ""}
+              src={`https://sbwears.com/image/${item?.productId?.images?.[0]}`}
               alt={item.productId?.name}
             />
             <div className="flex flex-col ml-5 flex-1">

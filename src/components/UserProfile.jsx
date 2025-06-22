@@ -217,8 +217,8 @@ export default function UserProfile() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // const userId = localStorage.getItem("userId");
-        const userId = "68554e45ca949721a71c9373";
+        const userId = localStorage.getItem("userId");
+        // const userId = "68554e45ca949721a71c9373";
         if (!userId) {
           throw new Error("User ID not found");
         }
@@ -301,7 +301,8 @@ export default function UserProfile() {
     try {
       setLoading(true);
       // const userId = localStorage.getItem("userId");
-      const userId = "68554e45ca949721a71c9373";
+      // const userId = "68554e45ca949721a71c9373";
+      const userId = localStorage.getItem("userId");
       if (!userId) {
         throw new Error("User ID not found");
       }
@@ -353,7 +354,7 @@ export default function UserProfile() {
           <input
             type="text"
             name="firstName"
-            value={formData.firstName}
+            value={formData?.firstName}
             onChange={handleInputChange}
             readOnly={!isEditing}
             className="w-full py-2 border px-2 focus:outline-none"
@@ -365,7 +366,7 @@ export default function UserProfile() {
           <input
             type="text"
             name="lastName"
-            value={formData.lastName}
+            value={formData?.lastName}
             onChange={handleInputChange}
             readOnly={!isEditing}
             className="w-full py-2 border px-2 focus:outline-none"
@@ -377,7 +378,7 @@ export default function UserProfile() {
           <input
             type="email"
             name="email"
-            value={formData.email}
+            value={formData?.email}
             onChange={handleInputChange}
             readOnly={!isEditing}
             className="w-full py-2 border px-2 focus:outline-none"
@@ -389,7 +390,7 @@ export default function UserProfile() {
           <input
             type="tel"
             name="phoneNumber"
-            value={formData.phoneNumber}
+            value={formData?.phoneNumber}
             readOnly
             className="w-full py-2 border px-2 focus:outline-none"
           />
@@ -402,7 +403,7 @@ export default function UserProfile() {
               type="text"
               name="day"
               placeholder="DD"
-              value={formData.dob.day}
+              value={formData?.dob?.day}
               onChange={handleBirthDateChange}
               readOnly={!isEditing}
               className="w-full border p-3 focus:outline-none"
@@ -411,7 +412,7 @@ export default function UserProfile() {
               type="text"
               name="month"
               placeholder="MM"
-              value={formData.dob.month}
+              value={formData?.dob?.month}
               onChange={handleBirthDateChange}
               readOnly={!isEditing}
               className="w-full p-3 border focus:outline-none"
@@ -420,7 +421,7 @@ export default function UserProfile() {
               type="text"
               name="year"
               placeholder="YYYY"
-              value={formData.dob.year}
+              value={formData?.dob?.year}
               onChange={handleBirthDateChange}
               readOnly={!isEditing}
               className="w-full p-3 border focus:outline-none"
@@ -433,17 +434,17 @@ export default function UserProfile() {
           <div className="flex gap-4 sm:flex-row flex-col">
             <GenderButton
               text="Male"
-              selected={formData.gender === "Male"}
+              selected={formData?.gender === "Male"}
               onClick={() => isEditing && setFormData(prev => ({ ...prev, gender: "Male" }))}
             />
             <GenderButton
               text="Female"
-              selected={formData.gender === "Female"}
+              selected={formData?.gender === "Female"}
               onClick={() => isEditing && setFormData(prev => ({ ...prev, gender: "Female" }))}
             />
             <GenderButton
               text="Other"
-              selected={formData.gender === "Other"}
+              selected={formData?.gender === "Other"}
               onClick={() => isEditing && setFormData(prev => ({ ...prev, gender: "Other" }))}
             />
           </div>

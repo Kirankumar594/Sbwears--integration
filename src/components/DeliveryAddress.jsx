@@ -24,7 +24,8 @@ export default function DeliveryAddress() {
     const fetchUserData = async () => {
       try {
         setError(null);
-        const userId = "68554e45ca949721a71c9373"; // Hardcoded for now
+        // const userId = "68554e45ca949721a71c9373"; // Hardcoded for now
+        const userId = localStorage.getItem("userId");
         if (!userId) return;
 
         const response = await axios.get(`https://sbwears.com/api/users/user/${userId}`);
@@ -65,8 +66,8 @@ export default function DeliveryAddress() {
     try {
       setLoading(true);
       setError(null);
-      const userId = "68554e45ca949721a71c9373";
-
+      // const userId = "68554e45ca949721a71c9373";
+      const userId = localStorage.getItem("userId");
       await axios.post("https://sbwears.com/api/users/update/user", {
         userId,
         shippingDetails: formData
