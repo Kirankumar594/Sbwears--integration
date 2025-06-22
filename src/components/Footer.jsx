@@ -15,7 +15,7 @@ const Footer = () => {
           <div>
             <h2 className="text-lg font-bold text-darkblush">Contact Us</h2>
             <p className="mt-3 text-xs text-darkblush">
-              +91 9899990772 | care@libas.in MONDAY to SATURDAY 10 am to 6 pm
+              +91 9899990772 | care@sbwears.in MONDAY to SATURDAY 10 am to 6 pm
             </p>
             <div className="flex space-x-4 mt-4">
               <button className="text-darkblush text-xs">
@@ -51,9 +51,9 @@ const Footer = () => {
               <li>
                 <button className="text-darkblush text-xs ">Kurtas</button>
               </li>
-              <li>
+              {/* <li>
                 <button className="text-darkblush text-xs ">Libas Art</button>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -121,7 +121,7 @@ const Footer = () => {
 
       </div>
         <div className=" border-gray-700 mt-10 pt-6 text-center text-darkblush text-xs">
-          <p>&copy; Libas {new Date().getFullYear()}. All Rights Reserved.</p>
+          <p>&copy; SB Wears {new Date().getFullYear()}. All Rights Reserved.</p>
         </div>
     </footer>
   );

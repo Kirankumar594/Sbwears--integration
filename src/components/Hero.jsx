@@ -33,11 +33,11 @@ const Hero = () => {
         className="object-cover hover:cursor-pointer"
         onClick={handleClick}
       />
-      <div class="flex items-center justify-center pb-10 text-gray-300 ">
+      {/* <div class="flex items-center justify-center pb-10 text-gray-300 ">
         <p class="text-center w-full text-xs mb-4  py-2 bg-buttonColor">
           SHOP FOR 2499 GET EXTRA 10% OFF | CODE: SALE10{" "}
         </p>
-      </div>
+      </div> */}
     </div>
   );
 };

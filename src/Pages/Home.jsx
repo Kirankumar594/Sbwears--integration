@@ -25,7 +25,8 @@ const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-
+  const [user, setUser] = useState(null);
+  console.log("user : " , user)
   const toggleCart = () => {
     setIsCartOpen((prev) => !prev);
     setIsMenuOpen(false);
@@ -78,18 +79,36 @@ const Home = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (search.trim()) {
-      setSearch('')
-      navigate(`/category?search=${search}`);
+      setSearch("");
+      // navigate(`/category?search=${search}`);
+      navigate(`/productsList?search=${search}`);
     }
   };
 
-  
+  const userToken = localStorage.getItem("userToken");
+  console.log("userToken : ", userToken);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+        // const userId = "68554e45ca949721a71c9373";
+        if (!userId) {
+          throw new Error("User ID not found"); 
+        }
+        const response = await axios.get(
+          `https://sbwears.com/api/users/user/${userId}`
+        );
+        const userData = response.data;
+        setUser(userData);
+        console.log("userData : ", userData);
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
 
+    fetchUserData();
+  }, []);
 
-
-
-
-  
   return (
     <div className="w-full h-full">
       <nav
@@ -134,17 +153,22 @@ const Home = () => {
               </div>
             </div>
             {isSearchBar && (
-              <div 
-              className={`absolute lg:px-6 px-2 left-0 lg:left-52 top-0 w-full lg:w-4/6 rounded-lg  md:mt-28 lg:mt-28 mt-20 flex flex-row border ${
-                isScrolled ? "bg-white" : "bg-transparent"
-              } `}
-            >
-            
+              <div
+                className={`absolute lg:px-6 px-2 left-0 lg:left-52 top-0 w-full lg:w-4/6 rounded-lg  md:mt-28 lg:mt-28 mt-20 flex flex-row border ${
+                  isScrolled ? "bg-white" : "bg-transparent"
+                } `}
+              >
                 <div className="flex flex-row items-center w-full gap-2">
-                  <CiSearch className={`h-5 w-5 ${isScrolled ? "text-black ": "text-white"}`} />
-                  <form onSubmit={handleSearch}> 
-                    <input 
-                      className={`focus:outline-none bg-transparent w-full py-3 ${isScrolled ? "text-black" : "text-white"}`}
+                  <CiSearch
+                    className={`h-5 w-5 ${
+                      isScrolled ? "text-black " : "text-white"
+                    }`}
+                  />
+                  <form onSubmit={handleSearch}>
+                    <input
+                      className={`focus:outline-none bg-transparent w-full py-3 ${
+                        isScrolled ? "text-black" : "text-white"
+                      }`}
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
                       placeholder="Search..."
@@ -152,10 +176,14 @@ const Home = () => {
                   </form>
                 </div>
                 <button
-                  className={`text-xl font-bold  ${isScrolled ? "text-black" : "text-white"}`}
+                  className={`text-xl font-bold  ${
+                    isScrolled ? "text-black" : "text-white"
+                  }`}
                   onClick={() => setSearchBar(false)}
                 >
-                  <IoClose className={`${isScrolled ? "text-gray-600" : "text-white"}`}/>
+                  <IoClose
+                    className={`${isScrolled ? "text-gray-600" : "text-white"}`}
+                  />
                 </button>
               </div>
             )}
@@ -200,34 +228,53 @@ const Home = () => {
             {isAccountOpen && (
               <div className="absolute z-50 w-48 mt-2 bg-white border rounded-md shadow-lg top-16 right-10">
                 <div className="flex flex-col gap-3 p-4">
-                  <button className="px-2 py-1 text-left rounded-md hover:bg-gray-100">
-                    <a href="account">My Account</a>
-                  </button>
-                  <button
-                    className="px-2 py-1 text-left border rounded-md hover:bg-gray-100"
-                    onClick={toggleLogin}
-                  >
-                    Login
-                  </button>
+                  {userToken ? (
+                    <>
+                      <button className="px-2 py-1 text-left rounded-md hover:bg-gray-100">
+                        <a href="/account">My Account</a>
+                      </button>
+                      <button
+                        className="px-2 py-1 text-left border rounded-md hover:bg-gray-100"
+                        onClick={() => {
+                          localStorage.clear();
+                          window.location.reload();
+                        }}
+                      >
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      className="px-2 py-1 text-left border rounded-md hover:bg-gray-100"
+                      onClick={toggleLogin}
+                    >
+                      Login
+                    </button>
+                  )}
                 </div>
               </div>
             )}
-            {isLoginOpen && <Login />}
-            <div className="flex justify-center gap-3 lg:gap-8 md:gap-8">
-              {/* <a href="account">
-                <FaRegHeart
-                  className={`w-5 h-5  ${
-                    isScrolled ? "text-black" : "text-white"
-                  }`}
-                />
-              </a> */}
-              <FiShoppingCart
-                className={`w-5 h-5 cursor-pointer ${
-                  isScrolled ? "text-black" : "text-white"
-                }`}
-                onClick={toggleCart}
-              />
-            </div>
+
+            {isLoginOpen && <Login setIsLoginOpen={setIsLoginOpen} />}
+             {
+              userToken ? (
+                <div
+                  className="relative inline-block cursor-pointer"
+                  onClick={toggleCart}
+                >
+                  <FiShoppingCart
+                    className={`w-6 h-6  ${
+                      isScrolled ? "text-black" : "text-white"
+                    }`}
+                  />
+                  {<span className="absolute -top-1 -right-2 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                    {user?.cart?.length}
+                  </span>}
+                </div>
+              ) : (
+                <></>
+              )
+             }
           </div>
         </div>
         <div

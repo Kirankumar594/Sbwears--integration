@@ -1,128 +1,5 @@
-// import React, { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { Products } from "../data/dummyData";
-// import Filter from "../components/Filter";
-// import { BiSortAlt2 } from "react-icons/bi";
-// import axios from "axios";
-
-// export default function ProductsListing() {
-//   const navigate = useNavigate();
-//   const handleClick = (productId) => {
-//     localStorage.setItem("selectedProductId", productId);
-//     navigate(`/product`);
-//   };
-
-//   const [product, setProduct] = useState([]);
-//    const [filteredProducts, setFilteredProducts] = useState([]);
-//   const getProduct = async () => {
-//     try {
-//       const res = await axios.get(
-//         "https://sbwears.com/api/admin/category/product"
-//       );
-//       console.log(res, "product");
-//       setProduct(res.data.products);
-//        setFilteredProducts(res.data.products); // Initialize with all products
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-
-//   console.log(filteredProducts, "filteredProducts");
-
-//   useEffect(() => {
-//     getProduct();
-//   }, []);
-
-//   return (
-//     <>
-//       <div className="container flex flex-row px-4 py-5 mx-auto mt-5">
-//         <div className="hidden w-full py-2 mt-10 mr-10 text-black rounded-md lg:block">
-//           <Filter  productsData={product}
-//           onFilter={setFilteredProducts} />
-//         </div>
-//         <div className="flex flex-col">
-//           <div className="sticky top-0 flex flex-row py-2 mt-3 bg-white lg:hidden ">
-//             <button className="w-full py-2 text-xs tracking-widest text-white border bg-buttonColor">
-//               <div className="flex flex-row items-center justify-center">
-//                 <svg
-//                   className="w-5 h-5 mr-2"
-//                   viewBox="0 0 24 24"
-//                   fill="none"
-//                   stroke="currentColor"
-//                 >
-//                   <path
-//                     strokeLinecap="round"
-//                     strokeLinejoin="round"
-//                     strokeWidth={1}
-//                     d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-//                   />
-//                 </svg>
-//                 FILTER (1)
-//               </div>
-//             </button>
-//             <button className="w-full py-2 text-xs tracking-widest bg-white border">
-//               <div className="flex flex-row items-center justify-center">
-//                 <BiSortAlt2 className="mr-1 size-4" />
-//                 SORT
-//               </div>
-//             </button>
-//           </div>
-//           <div className="flex-row justify-between hidden lg:flex">
-//             <p className="mt-5 mb-5 text-xs text-gray-900"> 125 products</p>
-//             <div className="flex flex-row justify-between">
-//               <p className="mt-5 text-xs tracking-widest text-gray-900">
-//                 {" "}
-//                 SORT
-//               </p>
-//               <p className="mt-5 ml-5 text-xs tracking-widest text-gray-900">
-//                 FEATURED
-//               </p>
-//               <p className="mt-5 ml-10"></p>
-//             </div>
-//           </div>
-//           <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
-//             {product?.map((product) => (
-//               <div
-//                 className="mb-6 hover:cursor-pointer"
-//                 onClick={() => handleClick(product.id)}
-//               >
-//                 <img
-//                   className="h-80% w-60% object-cover object-center"
-//                   src={`https://sbwears.com/image/${product.images[0]}`}
-//                   alt="img"
-//                 />
-
-//                 <p
-//                   className="pt-2 pl-2 text-xs text-gray-900 text-truncate"
-//                   dangerouslySetInnerHTML={{ __html: product.description }}
-//                 ></p>
-
-//                 <div className="flex flex-row">
-//                   <p className="pt-2 pl-2 text-xs text-gray-900 line-through">
-//                     {product.price}
-//                   </p>
-//                   <p className="pt-2 pl-2 text-xs text-gray-900">
-//                     {product.priceAfterDiscount}{" "}
-//                   </p>
-//                   <p className="pt-2 pl-2 text-xs text-red-400 ">
-//                     {product.discount} off
-//                   </p>
-//                 </div>
-//                 <p className="pt-2 pl-2 text-xs text-gray-900">
-//                   {product.size}
-//                 </p>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
-
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { BiSortAlt2 } from "react-icons/bi";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 
@@ -203,9 +80,10 @@ const Filter = ({ productsData, onFilter }) => {
 
     const filteredProducts = productsData.filter((product) => {
       // Size filter
-      if (selectedSizes.length > 0 && product.size) {
+      console.log("product : " , product)
+      if (selectedSizes.length > 0 && product.availableSizes) {
         const hasSize = selectedSizes.some((size) =>
-          product.size.includes(size)
+          product?.availableSizes?.includes(size)
         );
         if (!hasSize) return false;
       }
@@ -276,7 +154,19 @@ const Filter = ({ productsData, onFilter }) => {
   };
 
   return (
-    <div className="max-w-xs sticky top-0 mx-auto p-4 max-h-[calc(100vh-16px)] overflow-y-auto">
+    <div className="w-full sticky top-0 mx-auto p-4 max-h-[calc(100vh-16px)] overflow-y-auto">
+      <button
+        onClick={() => {
+          setSelectedSizes([]);
+          setSelectedColors([]);
+          setSelectedCategory("");
+          setSelectedFabric("");
+          setSelectedOccasion("");
+        }}
+        className="w-full my-4 py-2 bg-gray-200 hover:bg-gray-300 text-sm font-semibold rounded"
+      >
+        Reset Filters
+      </button>
       <div className="flex items-center pb-4 border-b">
         <svg
           className="w-5 h-5 mr-2"
@@ -399,13 +289,44 @@ export default function ProductsListing() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
+  const location = useLocation();
+  const [sortOrder, setSortOrder] = useState("");
+
   const getProducts = async () => {
     try {
-      const res = await axios.get(
-        "https://sbwears.com/api/admin/category/product"
-      );
-      setProducts(res.data.products || []);
-      setFilteredProducts(res.data.products || []);
+      const res = await axios.get("https://sbwears.com/api/admin/category/product");
+      let allProducts = res.data.products || [];
+
+      // Get search and category params
+      const searchParams = new URLSearchParams(location.search);
+      const searchQuery = searchParams.get("search")?.toLowerCase();
+      const categoryQuery = searchParams.get("category");
+
+      // Filter by search keyword
+      if (searchQuery) {
+        allProducts = allProducts.filter(
+          (p) =>
+            p.name?.toLowerCase().includes(searchQuery) ||
+            p.description?.toLowerCase().includes(searchQuery)
+        );
+      }
+
+      // Filter by category ID
+      if (categoryQuery) {
+        allProducts = allProducts.filter(
+          (p) => p.productCategory === categoryQuery
+        );
+      }
+
+      // Apply sort if present
+      if (sortOrder === "lowToHigh") {
+        allProducts.sort((a, b) => a.offerPrice - b.offerPrice);
+      } else if (sortOrder === "highToLow") {
+        allProducts.sort((a, b) => b.offerPrice - a.offerPrice);
+      }
+
+      setProducts(allProducts);
+      setFilteredProducts(allProducts);
     } catch (error) {
       console.error("Error fetching products:", error);
       setProducts([]);
@@ -415,60 +336,37 @@ export default function ProductsListing() {
 
   useEffect(() => {
     getProducts();
-  }, []);
+  }, [location.search, sortOrder]);
+
 
   return (
-    <div className="container flex flex-col px-4 py-5 mx-auto mt-5 lg:flex-row">
-      {/* Filter Sidebar (Desktop) */}
-      <div className="w-full py-2 mt-10 mr-10 text-black rounded-md lg:block">
+    <div className="container flex flex-col  mx-auto mt-5 lg:flex-row"> 
+      <div className="w-full lg:w-[30%]  mr-10 text-black rounded-md lg:block">
         <Filter productsData={products} onFilter={setFilteredProducts} />
       </div>
 
       {/* Main Content */}
       <div className="flex flex-col w-full">
-        {/* Mobile Filter/Sort Buttons */}
-        <div className="sticky top-0 flex flex-row py-2 mt-3 bg-white lg:hidden">
-          <button className="w-full py-2 text-xs tracking-widest text-white border bg-buttonColor">
-            <div className="flex flex-row items-center justify-center">
-              <svg
-                className="w-5 h-5 mr-2"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1}
-                  d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-                />
-              </svg>
-              FILTER
-            </div>
-          </button>
-          <button className="w-full py-2 text-xs tracking-widest bg-white border">
-            <div className="flex flex-row items-center justify-center">
-              <BiSortAlt2 className="mr-1 size-4" />
-              SORT
-            </div>
-          </button>
-        </div>
-
-        {/* Desktop Product Count/Sort */}
+        {/*Product Count/Sort */}
         <div className="flex-row justify-between hidden lg:flex">
           <p className="mt-5 mb-5 text-xs text-gray-900">
             {filteredProducts.length} products
           </p>
-          <div className="flex flex-row justify-between">
-            <p className="mt-5 text-xs tracking-widest text-gray-900">SORT</p>
-            <p className="mt-5 ml-5 text-xs tracking-widest text-gray-900">
-              FEATURED
-            </p>
+          <div className="flex flex-row justify-between"> 
+            <select
+              className="ml-4 mt-4 border border-gray-300 text-sm rounded px-2 py-1"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value="">Sort by</option>
+              <option value="lowToHigh">Price: Low to High</option>
+              <option value="highToLow">Price: High to Low</option>
+            </select>
           </div>
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
           {filteredProducts.map((product) => (
             <div
               key={product.id}
@@ -481,21 +379,21 @@ export default function ProductsListing() {
                 alt={product.name}
               />
               <p
-                className="pt-2 pl-2 text-xs text-gray-900 text-truncate"
+                className="pt-2 pl-2 text-xs text-gray-900 truncate"
                 dangerouslySetInnerHTML={{ __html: product.description }}
               ></p>
               <div className="flex flex-row">
                 <p className="pt-2 pl-2 text-xs text-gray-900 line-through">
-                  {product.price}
+                  ₹ {product.mrp}
                 </p>
                 <p className="pt-2 pl-2 text-xs text-gray-900">
-                  {product.priceAfterDiscount}
+                  ₹ {product.offerPrice}
                 </p>
                 <p className="pt-2 pl-2 text-xs text-red-400">
-                  {product.discount} off
+                  {product.discount} % off
                 </p>
-              </div>
-              <p className="pt-2 pl-2 text-xs text-gray-900">{product.size}</p>
+              </div> 
+              <p className="pt-2 pl-2 text-xs text-gray-900">{product.availableSizes?.join(" ")}</p>
             </div>
           ))}
         </div>

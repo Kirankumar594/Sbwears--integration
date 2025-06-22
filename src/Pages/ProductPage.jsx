@@ -38,25 +38,32 @@ export default function ProductPage() {
       </div>
     );
 
-  const handleAddToCart = async () => {
-    console.log("clicked.......");
+    // const userId = "68554e45ca949721a71c9373";
+  const handleAddToCart = async () => { 
+    if(!selectedSize){
+      alert("Please select size")
+      return
+    }
+    const userId = localStorage.getItem("userId") 
     const cart = {
-      userId: "679df27605ddb49197de32fb",
+      userId,
       productId: id,
       quantity: 1,
       size: selectedSize,
     };
     try {
       const res = await axios.post(
+        // "https://sbwears.com/api/admin/cart/add",
         "https://sbwears.com/api/admin/cart/add",
         cart
       );
+      console.log("res : " , res)
       if (res.status === 200) alert("Product added to cart successfully");
     } catch (error) {
       console.log(error);
     }
   };
-
+  console.log("product : " , product)
   return (
     <>
       <div className="container flex-col px-4 py-5 mx-auto mt-5 lg:flex lg:flex-row">
@@ -140,7 +147,7 @@ export default function ProductPage() {
               ADD TO CART
             </button>
 
-            <div className="mb-6">
+            {/* <div className="mb-6">
               <p className="mb-2 text-sm text-gray-700">Delivery For</p>
               <div className="flex overflow-hidden border border-gray-300 rounded-md">
                 <input
@@ -152,7 +159,7 @@ export default function ProductPage() {
                   CHECK
                 </button>
               </div>
-            </div>
+            </div> */}
 
             <div className="space-y-4">
               <div className="flex items-center">
@@ -190,7 +197,7 @@ export default function ProductPage() {
             </div>
 
             <div className="mt-8">
-              <ProductInfo />
+              <ProductInfo product={product} />
             </div>
           </div>
         </div>

@@ -22,7 +22,8 @@ const FilterSection = ({ title, isOpen, onToggle, children }) => {
 }
  
  
-function ProductInfo() {
+function ProductInfo({product}) {
+  console.log("product 123: " , product)
   const [openSections, setOpenSections] = useState({
     description: false,
     style: false,
@@ -38,7 +39,9 @@ function ProductInfo() {
       [section]: !prev[section]
     }))
   }
-
+  const renderHTML = (htmlString) => {
+    return { __html: htmlString };
+  };
   return ( 
     <div className="max-w sticky top-0 mx-auto  max-h-[calc(400px)] overflow-y-auto">
  
@@ -48,42 +51,48 @@ function ProductInfo() {
         isOpen={openSections.description}
         onToggle={() => toggleSection('description')}
       > 
-        <div className="space-y-2 text-xs ">
-           The Zarina ensemble is a glamorous 3-piece georgette straight suit set in a luxurious wine hue. A beautiful melange of mirrorwork, sequins, and embroidery on both the kurta and the palazzos is here to put the spotlight on you. Add bling to all your celebrations with the Zarina outfit.
-         </div>
-      </FilterSection>
+<div
+  className="space-y-2 text-xs"
+  dangerouslySetInnerHTML={{ __html: product?.description }}
+/>
 
-      <FilterSection
-        title="STYLE NOTES"
-        isOpen={openSections.style}
-        onToggle={() => toggleSection('style')}
-        >
-        <div className="space-y-2">
-            
-        </div>
-    </FilterSection>
+      </FilterSection>
+ 
       <FilterSection 
         title="SIZE & FIT"
         isOpen={openSections.size}
         onToggle={() => toggleSection('size')}
-      />
-
-      <FilterSection
+      >
+        <img src={`https://sbwears.com/image/${product.sizeChart}`}/>
+</FilterSection>
+      {/* <FilterSection
         title="MATERIAL"
         isOpen={openSections.material}
         onToggle={() => toggleSection('material')}
-      />
+      /> */}
 
       <FilterSection
         title="SPECIFICATIONS"
         isOpen={openSections.specifications}
         onToggle={() => toggleSection('specifications')}
+      >
+      <div
+        className="space-y-2 text-xs"
+        dangerouslySetInnerHTML={{ __html: product?.additionalInfo }}
       />
-      <FilterSection
+
+      </FilterSection>
+      {/* <FilterSection
         title="SELLER INFORMATION"
         isOpen={openSections.seller}
         onToggle={() => toggleSection('seller')}
+      >
+      <div
+        className="space-y-2 text-xs"
+        dangerouslySetInnerHTML={{ __html: product?.additionalInfo }}
       />
+
+      </FilterSection> */}
     </div>
   )
 }

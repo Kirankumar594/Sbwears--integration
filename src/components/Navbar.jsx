@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiShoppingCart } from "react-icons/fi";
 import { FaRegHeart } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
@@ -11,6 +11,7 @@ import Menu from "./Menu";
 import Cart from "./Cart";
 import Login from "./Login";  
 import { useNavigate } from "react-router-dom";  
+import axios from "axios";
 
 const Navbar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -18,6 +19,29 @@ const Navbar = () => {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSearchBar, setSearchBar] = useState(false); 
+  const [user, setUser] = useState(null); 
+
+    useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+        // const userId = "68554e45ca949721a71c9373";
+        if (!userId) {
+          throw new Error("User ID not found"); 
+        }
+        const response = await axios.get(
+          `https://sbwears.com/api/users/user/${userId}`
+        );
+        const userData = response.data;
+        setUser(userData);
+        console.log("userData : ", userData);
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const toggleCart = () => {
     setIsCartOpen((prev) => !prev);
@@ -56,9 +80,10 @@ const Navbar = () => {
     e.preventDefault(); 
     if (search.trim()) {
       setSearch('')
-       navigate(`/category?search=${search}`);
+       navigate(`/productsList?search=${search}`);
     }
   };
+  const userToken = localStorage.getItem("userToken");
   return (
     <div>
       <nav className="top-0 left-0 w-full shadow-sm bg-white">
@@ -135,7 +160,7 @@ const Navbar = () => {
             {isAccountOpen && (
               <div className="absolute top-full right-0 mt-2 bg-white shadow-lg border rounded-md z-50 w-48">
                 <div className="flex flex-col gap-3 p-4">
-                  <button className="text-left hover:bg-gray-100 px-2 py-1 rounded-md">
+                  {/* <button className="text-left hover:bg-gray-100 px-2 py-1 rounded-md">
                     <a href="account">My Account</a>
                   </button>
                   <button
@@ -143,7 +168,30 @@ const Navbar = () => {
                     onClick={toggleLogin}
                   >
                     Login
-                  </button>
+                  </button> */}
+                  {userToken ? (
+                    <>
+                      <button className="px-2 py-1 text-left rounded-md hover:bg-gray-100">
+                        <a href="/account">My Account</a>
+                      </button>
+                      <button
+                        className="px-2 py-1 text-left border rounded-md hover:bg-gray-100"
+                        onClick={() => {
+                          localStorage.clear();
+                          window.location.reload();
+                        }}
+                      >
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      className="px-2 py-1 text-left border rounded-md hover:bg-gray-100"
+                      onClick={toggleLogin}
+                    >
+                      Login
+                    </button>
+                  )}
                 </div>
               </div>
             )}
@@ -156,12 +204,27 @@ const Navbar = () => {
             <a href="account">
               <FaRegHeart className="  h-5 w-5" />
             </a> */}
-            <button
+            {/* <button
               className="relative flex items-center space-x-2  py-1 rounded-md"
               onClick={toggleCart}
             >
               <FiShoppingCart className="text-black h-5 w-5" />
-            </button>
+            </button> */}
+            {
+              userToken ? (
+                <div
+                  className="relative inline-block cursor-pointer"
+                  onClick={toggleCart}
+                >
+                  <FiShoppingCart className="text-black w-6 h-6 " />
+                  {<span className="absolute -top-1 -right-2 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                    {user?.cart?.length}
+                  </span>}
+                </div>
+              ) : (
+                <></>
+              )
+             }
           </div>
         </div>
       </nav>
